@@ -8,6 +8,7 @@ import VideoSection from "./components/VideoSection";
 import FamilyIntroSection from "./components/FamilyIntroSection";
 import Footer from "./components/Footer";
 import NewsSlider from "./components/NewsSlider";
+import FamilyTeamOfficial from "./components/FamilyTeamOfficial";
 import NotFound from "./pages/not-found";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ function Home() {
         <HeroSection />
         <VideoSection />
         <FamilyIntroSection />
+        <FamilyTeamOfficial />
       </main>
       <Footer />
     </div>

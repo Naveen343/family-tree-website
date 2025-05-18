@@ -6,6 +6,7 @@ import logoImage from "../assets/family-logo.jpeg";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [familyDropdownOpen, setFamilyDropdownOpen] = useState(false);
   const [location] = useLocation();
   const { scrollY } = useScroll();
   
@@ -42,6 +43,29 @@ const Header = () => {
     };
   }, [mobileMenuOpen]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const dropdown = document.getElementById("family-dropdown");
+      const toggle = document.getElementById("family-toggle");
+  
+      if (
+        familyDropdownOpen &&
+        dropdown &&
+        !dropdown.contains(event.target) &&
+        toggle &&
+        !toggle.contains(event.target)
+      ) {
+        setFamilyDropdownOpen(false);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [familyDropdownOpen]);
+  
+
   // Enhanced header that changes transparency based on scroll position
   const isScrolled = scrollY > 10;
   const [mobileFamilyOpen, setMobileFamilyOpen] = useState(false);
@@ -65,7 +89,9 @@ const Header = () => {
             </li>
             <li className="relative group">
             <span
-              className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${
+              id="family-toggle"
+              onClick={() => setFamilyDropdownOpen(!familyDropdownOpen)}
+              className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer select-none ${
                 location === "/family-tree"
                   ? "text-yellow-500 border-b-2 border-yellow-500"
                   : isScrolled
@@ -76,8 +102,13 @@ const Header = () => {
               Family
             </span>
 
-            {/* Dropdown Menu */}
-            <ul className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 z-50">
+            {/* Dropdown */}
+            <ul
+              id="family-dropdown"
+              className={`absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md transition-opacity duration-200 z-50 
+                ${familyDropdownOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} 
+                group-hover:opacity-100 group-hover:pointer-events-auto`}
+            >
               <li>
                 <Link href="/family-history">
                   <span className="block px-4 py-2 text-sm text-gray-800 hover:bg-yellow-100 hover:text-yellow-600">
@@ -115,6 +146,7 @@ const Header = () => {
               </li>
             </ul>
           </li>
+
 
             <li>
               <Link href="/news-events">
