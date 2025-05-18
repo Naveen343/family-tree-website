@@ -28,7 +28,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative w-full" style={{ height: 'calc(96vh)' }}>
+    <section className="relative w-full" style={{ height: "calc(96vh)" }}>
       <div className="absolute inset-0 bg-black opacity-40 z-10"></div>
 
       {images.map((img, index) => (
@@ -42,6 +42,7 @@ const HeroSection = () => {
         />
       ))}
 
+      {/* Arrow Buttons */}
       <button
         onClick={goToPrev}
         className="absolute top-1/2 left-4 z-20 transform -translate-y-1/2 text-white text-3xl bg-black bg-opacity-30 px-3 pb-[8px] rounded-full hover:bg-opacity-60"
@@ -55,6 +56,7 @@ const HeroSection = () => {
         &#8594;
       </button>
 
+      {/* Slide Indicators */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
         {images.map((_, index) => (
           <button
@@ -65,6 +67,16 @@ const HeroSection = () => {
             }`}
           ></button>
         ))}
+      </div>
+
+      {/* QUOTE BOX */}
+      <div className="absolute bottom-16 left-6 md:left-12 w-[340px] md:w-[400px] h-auto bg-white bg-opacity-75 p-4 text-base md:text-xl font-bold rounded-2xl z-20">
+        <div>
+          Tradition, Lineage, Ancestors :<br />
+          Key to deep family bonds.<br />
+          പാരമ്പര്യം, വംശം, പൂർവ്വികർ :<br />
+          ആഴത്തിലുള്ള കുടുംബബന്ധങ്ങളുടെ താക്കോൽ.<br />
+        </div>
       </div>
     </section>
   );

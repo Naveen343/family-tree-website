@@ -5,16 +5,16 @@ import logoImage from "../assets/family-logo.jpeg";
 
 const VideoSection = () => {
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section className="md:py-14 bg-white">
       <div className="container mx-auto px-4">
 
-        <div className="text-center mb-10">
+        {/* <div className="text-center mb-10">
           <img
               src={logoImage}
               alt="Family Legacy Logo"
               className={`w-[400px] h-[290px] transition-opacity duration-300 mx-auto`}
             />
-        </div>
+        </div> */}
 
         <div className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-primary mb-4">
