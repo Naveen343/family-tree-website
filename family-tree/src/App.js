@@ -7,6 +7,7 @@ import HeroSection from "./components/HeroSection";
 import VideoSection from "./components/VideoSection";
 import FamilyIntroSection from "./components/FamilyIntroSection";
 import Footer from "./components/Footer";
+import NewsSlider from "./components/NewsSlider";
 import NotFound from "./pages/not-found";
 
 const queryClient = new QueryClient();
@@ -15,6 +16,7 @@ function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <NewsSlider />
       <main className="flex-grow">
         <HeroSection />
         <VideoSection />

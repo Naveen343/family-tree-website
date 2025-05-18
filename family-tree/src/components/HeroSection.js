@@ -28,7 +28,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-screen overflow-hidden">
+    <section className="relative w-full" style={{ height: 'calc(96vh)' }}>
       <div className="absolute inset-0 bg-black opacity-40 z-10"></div>
 
       {images.map((img, index) => (
