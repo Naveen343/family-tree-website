@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useScroll } from "../hooks/use-scroll";
-import logoImage from "../assets/family-logo.jpeg";
+import logoImage from "../assets/family-logo.jpg";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -73,7 +73,7 @@ const Header = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-md" : "bg-transparent"
+        isScrolled ? "bg-black shadow-md bg-black font-bold" : "bg-black font-bold rounded-xl"
       }`}
     >
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -82,7 +82,7 @@ const Header = () => {
           <ul className="flex space-x-6">
             <li>
               <Link href="/">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-dark" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Home
                 </span>
               </Link>
@@ -95,7 +95,7 @@ const Header = () => {
                 location === "/family-tree"
                   ? "text-yellow-500 border-b-2 border-yellow-500"
                   : isScrolled
-                  ? "text-dark"
+                  ? "text-white"
                   : "text-white"
               }`}
             >
@@ -150,35 +150,35 @@ const Header = () => {
 
             <li>
               <Link href="/news-events">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-dark" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   News & Events
                 </span>
               </Link>
             </li>
             <li>
               <Link href="/charity">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-dark" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Charity
                 </span>
               </Link>
             </li>
             <li>
               <Link href="/academics">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-dark" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Academics
                 </span>
               </Link>
             </li>
             <li>
               <Link href="/family-matrimony">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-dark" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Family Matrimony
                 </span>
               </Link>
             </li>
             <li>
               <Link href="/about">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/about" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-dark" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/about" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   About
                 </span>
               </Link>
@@ -194,9 +194,9 @@ const Header = () => {
           className="md:hidden bg-transparent border-none p-2"
         >
           {mobileMenuOpen ? (
-            <X className={isScrolled ? "text-dark" : "text-white"} />
+            <X className={isScrolled ? "text-white" : "text-white"} />
           ) : (
-            <Menu className={isScrolled ? "text-dark" : "text-white"} />
+            <Menu className={isScrolled ? "text-white" : "text-white"} />
           )}
         </button>
 
@@ -205,7 +205,7 @@ const Header = () => {
         <div className="logo">
           <Link href="/">
             <div className="flex items-center cursor-pointer">
-            <h3 className="font-heading text-lg font-semibold">
+            <h3 className="font-heading text-lg font-semibold italic">
               <span className="text-secondary">Therampu Kudumbam </span> <br/>
               <span className="text-secondary">Since - 1701</span>
             </h3>

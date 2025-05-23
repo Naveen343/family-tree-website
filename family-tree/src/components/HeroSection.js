@@ -29,7 +29,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative w-full" style={{ height: "calc(96vh)" }}>
-      <div className="absolute inset-0 bg-black opacity-40 z-10"></div>
+      <div className="absolute inset-0 bg-black opacity-65 z-10"></div>
 
       {images.map((img, index) => (
         <img
@@ -70,7 +70,7 @@ const HeroSection = () => {
       </div>
 
       {/* QUOTE BOX */}
-      <div className="absolute bottom-16 left-6 md:left-12 w-[340px] md:w-[400px] h-auto bg-white bg-opacity-75 p-4 text-base md:text-xl font-bold rounded-2xl z-20">
+      <div className="absolute bottom-16 italic font-serif left-6 md:left-12 w-[340px] md:w-[400px] h-auto bg-opacity-100 p-4 text-base md:text-2xl font-bold z-20 text-white">
         <div>
           Tradition, Lineage, Ancestors :<br />
           Key to deep family bonds.<br />

@@ -1,6 +1,6 @@
 import React from "react";
 import familyVideo from "../assets/family-video.mp4";
-import logoImage from "../assets/family-logo.jpeg";
+import logoImage from "../assets/family-logo.jpg";
 
 
 const VideoSection = () => {

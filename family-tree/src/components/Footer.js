@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
+import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon } from "lucide-react";
 
 
 const Footer = () => {
@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-heading text-xl font-semibold mb-4">
+            <h3 className="font-heading text-xl font-semibold mb-4 text-bold italic">
               <span className="text-secondary">Therampu</span> Kudumbam
             </h3>
             <p className="mb-4">
@@ -35,6 +35,13 @@ const Footer = () => {
                 aria-label="Twitter"
               >
                 <TwitterIcon size={18} />
+              </a>
+              <a 
+                href="#" 
+                className="text-white hover:text-secondary transition-colors duration-200"
+                aria-label="YouTube"
+              >
+                <YoutubeIcon size={18} />
               </a>
             </div>
           </div>
@@ -76,10 +83,10 @@ const Footer = () => {
           <div>
             <h3 className="font-heading text-lg font-semibold mb-4">Get In Touch</h3>
             <address className="not-italic text-white/80">
-              <p className="mb-2">123 Family Lane</p>
-              <p className="mb-2">Springfield, State 12345</p>
-              <p className="mb-2">Email: family@example.com</p>
-              <p>Phone: (123) 456-7890</p>
+              <p>Phone (1): +91 456-7890</p>
+              <p>Phone (2): +91 456-7890</p>
+              <p>Phone (3): +91 456-7890</p>
+              <p className="mb-2">Email: therampu@gmail.com</p>
             </address>
           </div>
         </div>

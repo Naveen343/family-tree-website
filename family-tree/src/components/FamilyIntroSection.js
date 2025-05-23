@@ -1,12 +1,12 @@
-import logoImage from "../assets/family-logo.jpeg";
+import logoImage from "../assets/family-logo.jpg";
 
 const FamilyIntroSection = () => {
   const families = [
     "Valiakalam",
     "Therampu",
-    "Aryapally",
+    "Ariyappally",
     "Vaithara",
-    "Vaitharmatton",
+    "Vaitharamattom",
     "Iykkara",
     "Puramathara",
   ];

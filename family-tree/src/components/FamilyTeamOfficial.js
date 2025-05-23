@@ -1,11 +1,11 @@
-import logoImage from "../assets/family-logo.jpeg";
-import guardian1 from "../assets/family-logo.jpeg";
-import guardian2 from "../assets/family-logo.jpeg";
-import guardian3 from "../assets/family-logo.jpeg";
-import guardian4 from "../assets/family-logo.jpeg";
-import spiritualFather1 from "../assets/family-logo.jpeg";
-import spiritualFather2 from "../assets/family-logo.jpeg";
-import spiritualFather3 from "../assets/family-logo.jpeg";
+import logoImage from "../assets/family-logo.jpg";
+import guardian1 from "../assets/family-logo.jpg";
+import guardian2 from "../assets/family-logo.jpg";
+import guardian3 from "../assets/family-logo.jpg";
+import guardian4 from "../assets/family-logo.jpg";
+import spiritualFather1 from "../assets/family-logo.jpg";
+import spiritualFather2 from "../assets/family-logo.jpg";
+import spiritualFather3 from "../assets/family-logo.jpg";
 
 const FamilyTreeOfficial = () => {
     return (
@@ -37,18 +37,19 @@ const FamilyTreeOfficial = () => {
           </div>
   
           {/* Center Section - Logo */}
-          <div className="w-full lg:basis-2/12 flex justify-center my-6 lg:my-0 pt-10">
+          <div className="w-full lg:basis-2/12 flex justify-center my-6 lg:my-0 pt-10 flex-col">
             <img
               src={logoImage}
               alt="Family Logo"
-              className="w-32 h-32 object-cover rounded-full"
+              className="w-58 h-58 object-cover rounded-full"
             />
+            <h5 className="text-lg font-bold italic mt-3 text-center mr-3">Family Logo</h5>
           </div>
   
           {/* Right Section - Our Guardians */}
           <div className="w-full lg:basis-5/12 text-center">
             <h3 className="text-lg font-bold mb-4">
-              Our Guardians <br /> രക്ഷിതാക്കൾ
+              Our Guardians <br /> രക്ഷാധികാരികൾ
             </h3>
             <div className="flex justify-center flex-wrap gap-3">
               <img
@@ -66,11 +67,7 @@ const FamilyTreeOfficial = () => {
                 alt="Guardian 3"
                 className="w-28 h-36 object-cover rounded"
               />
-              <img
-                src={guardian4}
-                alt="Guardian 4"
-                className="w-28 h-36 object-cover rounded"
-              />
+              
             </div>
           </div>
   
@@ -97,16 +94,22 @@ const FamilyTreeOfficial = () => {
                 alt="Spiritual Father 2"
                 className="w-28 h-36 object-cover rounded"
               />
+               <img
+                src={spiritualFather3}
+                alt="Spiritual Father 2"
+                className="w-28 h-36 object-cover rounded"
+              />
             </div>
           </div>
   
           {/* Center Section - Logo */}
-          <div className="w-full lg:basis-2/12 flex justify-center my-6 lg:my-0 pt-10">
+          <div className="w-full lg:basis-2/12 flex justify-center my-6 lg:my-0 pt-10 flex-col">
             <img
               src={logoImage}
               alt="Family Logo"
-              className="w-32 h-32 object-cover rounded-full"
+              className="w-58 h-58 object-cover rounded-full"
             />
+            <h5 className="text-lg font-bold italic mt-3 text-center mr-3">Family Logo</h5>
           </div>
   
           {/* Right Section - Our Guardians */}
@@ -132,11 +135,7 @@ const FamilyTreeOfficial = () => {
                 alt="Guardian 3"
                 className="w-28 h-36 object-cover rounded"
               />
-              <img
-                src={guardian4}
-                alt="Guardian 4"
-                className="w-28 h-36 object-cover rounded"
-              />
+             
             </div>
           </div>
   
