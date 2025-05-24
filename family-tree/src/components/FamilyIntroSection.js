@@ -1,4 +1,4 @@
-import logoImage from "../assets/family-logo.jpg";
+import commonImage from "../assets/common-logo.png";
 
 const FamilyIntroSection = () => {
   const families = [
@@ -23,7 +23,7 @@ const FamilyIntroSection = () => {
           >
             <h3 className="text-lg font-semibold mb-2">{family}</h3>
             <img
-              src={logoImage}
+              src={commonImage}
               alt={family}
               className="w-[100px] h-[100px] object-cover rounded-full"
             />
