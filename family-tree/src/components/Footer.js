@@ -83,9 +83,9 @@ const Footer = () => {
           <div>
             <h3 className="font-heading text-lg font-semibold mb-4">Get In Touch</h3>
             <address className="not-italic text-white/80">
-              <p>Phone (1): +91 456-7890</p>
-              <p>Phone (2): +91 456-7890</p>
-              <p>Phone (3): +91 456-7890</p>
+              <p>Phone (1) : +91 456-7890</p>
+              <p>Phone (2) : +91 456-7890</p>
+              <p>Phone (3) : +91 456-7890</p>
               <p className="mb-2">Email: therampu@gmail.com</p>
             </address>
           </div>
