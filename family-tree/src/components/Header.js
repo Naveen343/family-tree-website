@@ -144,6 +144,13 @@ const Header = () => {
                   </span>
                 </Link>
               </li>
+              <li>
+                <Link href="/family-bylaw">
+                  <span className="block px-4 py-2 text-sm text-gray-800 hover:bg-yellow-100 hover:text-yellow-600">
+                    Family By-law
+                  </span>
+                </Link>
+              </li>
             </ul>
           </li>
 
@@ -309,6 +316,17 @@ const Header = () => {
                           : "hover:bg-primary hover:text-white text-dark"
                       }`}>
                         Family E-book
+                      </div>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/family-bylaw">
+                      <div className={`py-1 px-2 rounded text-sm cursor-pointer ${
+                        location === "/family-ebook"
+                          ? "bg-light text-primary"
+                          : "hover:bg-primary hover:text-white text-dark"
+                      }`}>
+                        Family By-law
                       </div>
                     </Link>
                   </li>
