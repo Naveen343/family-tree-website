@@ -1,4 +1,5 @@
-import { Link } from "wouter";
+// import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon } from "lucide-react";
 
 
@@ -74,6 +75,13 @@ const Footer = () => {
                 <Link href="/contact">
                   <span className="text-white/80 hover:text-secondary transition-colors duration-200 cursor-pointer">
                     Contact
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/uploads">
+                  <span className="text-white/80 hover:text-secondary transition-colors duration-200 cursor-pointer">
+                    Uploads
                   </span>
                 </Link>
               </li>

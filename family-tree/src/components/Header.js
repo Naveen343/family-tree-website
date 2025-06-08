@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
+import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useScroll } from "../hooks/use-scroll";
 import logoImage from "../assets/family-logo.jpg";
@@ -73,7 +74,7 @@ const Header = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-black shadow-md bg-black font-bold" : "bg-black font-bold rounded-xl"
+        isScrolled ? "bg-black shadow-md bg-black font-bold" : "bg-black font-bold"
       }`}
     >
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
@@ -81,7 +82,7 @@ const Header = () => {
         <nav className="hidden md:block">
           <ul className="flex space-x-6">
             <li>
-              <Link href="/">
+              <Link to="/">
                 <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Home
                 </span>
@@ -110,42 +111,42 @@ const Header = () => {
                 group-hover:opacity-100 group-hover:pointer-events-auto`}
             >
               <li>
-                <Link href="/family-history">
+                <Link to="/family-history">
                   <span className="block px-4 py-2 text-sm text-gray-800 hover:bg-yellow-100 hover:text-yellow-600">
                     Family History
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/family-tree">
+                <Link to="/family-tree">
                   <span className="block px-4 py-2 text-sm text-gray-800 hover:bg-yellow-100 hover:text-yellow-600">
                     Family Tree
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/family-branches">
+                <Link to="/family-branches">
                   <span className="block px-4 py-2 text-sm text-gray-800 hover:bg-yellow-100 hover:text-yellow-600">
                     Family Branches
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/family-directory">
+                <Link to="/family-directory">
                   <span className="block px-4 py-2 text-sm text-gray-800 hover:bg-yellow-100 hover:text-yellow-600">
                     Family Directory
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/family-ebook">
+                <Link to="/family-ebook">
                   <span className="block px-4 py-2 text-sm text-gray-800 hover:bg-yellow-100 hover:text-yellow-600">
                     Family E-book
                   </span>
                 </Link>
               </li>
               <li>
-                <Link href="/family-bylaw">
+                <Link to="/family-bylaw">
                   <span className="block px-4 py-2 text-sm text-gray-800 hover:bg-yellow-100 hover:text-yellow-600">
                     Family By-law
                   </span>
@@ -156,35 +157,35 @@ const Header = () => {
 
 
             <li>
-              <Link href="/news-events">
+              <Link to="/news-events">
                 <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   News & Events
                 </span>
               </Link>
             </li>
             <li>
-              <Link href="/charity">
+              <Link to="/charity">
                 <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Charity
                 </span>
               </Link>
             </li>
             <li>
-              <Link href="/academics">
+              <Link to="/academics">
                 <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Academics
                 </span>
               </Link>
             </li>
             <li>
-              <Link href="/family-matrimony">
+              <Link to="/family-matrimony">
                 <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Family Matrimony
                 </span>
               </Link>
             </li>
             <li>
-              <Link href="/about">
+              <Link to="/about">
                 <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/about" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   About
                 </span>
@@ -210,7 +211,7 @@ const Header = () => {
 
         {/* Logo */}
         <div className="logo">
-          <Link href="/">
+          <Link to="/">
             <div className="flex items-center cursor-pointer">
             <h3 className="font-heading text-lg font-semibold italic">
               <span className="text-secondary">Therampu Kudumbam </span> <br/>
@@ -239,7 +240,7 @@ const Header = () => {
         <nav className="py-5 px-4">
           <ul className="space-y-4">
             <li>
-              <Link href="/">
+              <Link to="/">
                 <div className={`block font-medium py-2 px-3 rounded transition-colors duration-200 cursor-pointer ${
                   location === "/" 
                     ? "bg-light text-primary" 
@@ -265,7 +266,7 @@ const Header = () => {
               {mobileFamilyOpen && (
                 <ul className="pl-4 mt-2 space-y-2">
                   <li>
-                    <Link href="/family-history">
+                    <Link to="/family-history">
                       <div className={`py-1 px-2 rounded text-sm cursor-pointer ${
                         location === "/family-history"
                           ? "bg-light text-primary"
@@ -276,7 +277,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/family-tree">
+                    <Link to="/family-tree">
                       <div className={`py-1 px-2 rounded text-sm cursor-pointer ${
                         location === "/family-tree"
                           ? "bg-light text-primary"
@@ -287,7 +288,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/family-branches">
+                    <Link to="/family-branches">
                       <div className={`py-1 px-2 rounded text-sm cursor-pointer ${
                         location === "/family-branches"
                           ? "bg-light text-primary"
@@ -298,7 +299,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/family-directory">
+                    <Link to="/family-directory">
                       <div className={`py-1 px-2 rounded text-sm cursor-pointer ${
                         location === "/family-directory"
                           ? "bg-light text-primary"
@@ -309,7 +310,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/family-ebook">
+                    <Link to="/family-ebook">
                       <div className={`py-1 px-2 rounded text-sm cursor-pointer ${
                         location === "/family-ebook"
                           ? "bg-light text-primary"
@@ -320,7 +321,7 @@ const Header = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/family-bylaw">
+                    <Link to="/family-bylaw">
                       <div className={`py-1 px-2 rounded text-sm cursor-pointer ${
                         location === "/family-ebook"
                           ? "bg-light text-primary"
@@ -335,7 +336,7 @@ const Header = () => {
             </li>
 
             <li>
-              <Link href="/news-events">
+              <Link to="/news-events">
                 <div className={`block font-medium py-2 px-3 rounded transition-colors duration-200 cursor-pointer ${
                   location === "/news-events" 
                     ? "bg-light text-primary" 
@@ -346,7 +347,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href="/charity">
+              <Link to="/charity">
                 <div className={`block font-medium py-2 px-3 rounded transition-colors duration-200 cursor-pointer ${
                   location === "/charity" 
                     ? "bg-light text-primary" 
@@ -357,7 +358,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href="/academics">
+              <Link to="/academics">
                 <div className={`block font-medium py-2 px-3 rounded transition-colors duration-200 cursor-pointer ${
                   location === "/academics" 
                     ? "bg-light text-primary" 
@@ -368,7 +369,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href="/family-matrimony">
+              <Link to="/family-matrimony">
                 <div className={`block font-medium py-2 px-3 rounded transition-colors duration-200 cursor-pointer ${
                   location === "/family-matrimony" 
                     ? "bg-light text-primary" 
@@ -379,7 +380,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href="/about">
+              <Link to="/about">
                 <div className={`block font-medium py-2 px-3 rounded transition-colors duration-200 cursor-pointer ${
                   location === "/about" 
                     ? "bg-light text-primary" 
