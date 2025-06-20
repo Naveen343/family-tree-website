@@ -8,9 +8,27 @@ const VideoSection = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const filename = "videos/family-video.mp4";
   const fetchVideo = async () => {
-    const { data } = supabase.storage.from("homepage-media").getPublicUrl(filename);
-    setVideoUrl(data.publicUrl);
+    const { data, error } = await supabase.storage
+      .from("homepage-media")
+      .list("videos", {
+        search: "family-video.mp4",
+      });
+  
+    const exists = data?.some(file => file.name === "family-video.mp4");
+  
+    if (exists) {
+      const { data: publicData } = supabase
+        .storage
+        .from("homepage-media")
+        .getPublicUrl("videos/family-video.mp4");
+  
+      // Optional: bust cache
+      setVideoUrl(`${publicData.publicUrl}?t=${Date.now()}`);
+    } else {
+      setVideoUrl(""); // remove video
+    }
   };
+  
   useEffect(() => {
     fetchVideo();
   }, []);
@@ -28,6 +46,7 @@ const VideoSection = () => {
           </p>
         </div>
         
+      {videoUrl && (
         <div className="max-w-3xl mx-auto rounded-lg overflow-hidden shadow-xl">
           <div className="aspect-w-16 aspect-h-9 relative">
             <video 
@@ -53,6 +72,7 @@ const VideoSection = () => {
             </p>
           </div>
         </div>
+      )}
       </div>
     </section>
   );

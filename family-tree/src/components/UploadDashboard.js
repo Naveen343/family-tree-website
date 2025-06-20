@@ -9,9 +9,26 @@ const UploadDashboard = () => {
   const filename = "videos/family-video.mp4";
 
   const fetchVideo = async () => {
-    const { data } = supabase.storage.from("homepage-media").getPublicUrl(filename);
-    setVideoUrl(data.publicUrl);
+    const { data, error } = await supabase
+      .storage
+      .from("homepage-media")
+      .list("videos", {
+        search: "family-video.mp4",
+      });
+  
+    const exists = data?.some(file => file.name === "family-video.mp4");
+  
+    if (exists) {
+      const { data: publicData } = supabase
+        .storage
+        .from("homepage-media")
+        .getPublicUrl("videos/family-video.mp4");
+      setVideoUrl(publicData.publicUrl);
+    } else {
+      setVideoUrl("");
+    }
   };
+  
 
   useEffect(() => {
     if (activeTab === "home") fetchVideo();
@@ -77,7 +94,6 @@ const UploadDashboard = () => {
                 className="mb-4 w-full max-w-md rounded shadow"
                 src={videoUrl}
                 controls
-                autoPlay
                 loop
                 muted
               />
