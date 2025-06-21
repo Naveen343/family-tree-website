@@ -1,31 +1,58 @@
 import React, { useState, useEffect, useRef } from "react";
-import img1 from "../assets/slide1.jpg";
-import img2 from "../assets/slide2.jpg";
-import img3 from "../assets/slide3.jpg";
-import img4 from "../assets/slide4.jpg";
-
-const images = [img1, img2, img3, img4];
+import supabase from "../lib/supabaseClient";
 
 const HeroSection = () => {
+  const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef(null);
 
-  const goToNext = () => {
-    setCurrentSlide((prev) => (prev + 1) % images.length);
+  // Fetch hero images from Supabase
+  const fetchHeroImages = async () => {
+    const { data, error } = await supabase
+      .storage
+      .from("homepage-media")
+      .list("hero");
+
+    if (error) {
+      console.error("Error fetching hero images:", error.message);
+      return;
+    }
+
+    const urls = await Promise.all(
+      data.map(async (file) => {
+        const { data: publicData } = supabase
+          .storage
+          .from("homepage-media")
+          .getPublicUrl(`hero/${file.name}`);
+        return publicData.publicUrl;
+      })
+    );
+
+    setImages(urls);
   };
+
+  useEffect(() => {
+    fetchHeroImages();
+  }, []);
+
+  useEffect(() => {
+    slideInterval.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(slideInterval.current);
+  }, [images]);
 
   const goToPrev = () => {
     setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  const goToNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % images.length);
+  };
+
   const goToSlide = (index) => {
     setCurrentSlide(index);
   };
-
-  useEffect(() => {
-    slideInterval.current = setInterval(goToNext, 4000);
-    return () => clearInterval(slideInterval.current);
-  }, []);
 
   return (
     <section className="relative w-full" style={{ height: "calc(96vh)" }}>

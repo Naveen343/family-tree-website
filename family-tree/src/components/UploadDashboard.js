@@ -3,45 +3,45 @@ import supabase from "../lib/supabaseClient";
 
 const UploadDashboard = () => {
   const [activeTab, setActiveTab] = useState("home");
+
+  // Video states
   const [videoUrl, setVideoUrl] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
 
-  const filename = "videos/family-video.mp4";
+  // Hero Image states
+  const [heroImages, setHeroImages] = useState([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
+  const videoFilename = "videos/family-video.mp4";
+
+  // ------------------- Video Functions -------------------
   const fetchVideo = async () => {
     const { data, error } = await supabase
       .storage
       .from("homepage-media")
-      .list("videos", {
-        search: "family-video.mp4",
-      });
-  
-    const exists = data?.some(file => file.name === "family-video.mp4");
-  
+      .list("videos", { search: "family-video.mp4" });
+
+    const exists = data?.some((file) => file.name === "family-video.mp4");
+
     if (exists) {
       const { data: publicData } = supabase
         .storage
         .from("homepage-media")
-        .getPublicUrl("videos/family-video.mp4");
+        .getPublicUrl(videoFilename);
       setVideoUrl(publicData.publicUrl);
     } else {
       setVideoUrl("");
     }
   };
-  
 
-  useEffect(() => {
-    if (activeTab === "home") fetchVideo();
-  }, [activeTab]);
-
-  const handleUpload = async (e) => {
+  const handleVideoUpload = async (e) => {
     const file = e.target.files[0];
     if (!file || !file.type.includes("video")) return;
 
-    setUploading(true);
+    setUploadingVideo(true);
     const { error } = await supabase.storage
       .from("homepage-media")
-      .upload(filename, file, {
+      .upload(videoFilename, file, {
         upsert: true,
         cacheControl: "3600",
         contentType: file.type,
@@ -50,17 +50,82 @@ const UploadDashboard = () => {
     if (error) alert("Upload failed: " + error.message);
     else fetchVideo();
 
-    setUploading(false);
+    setUploadingVideo(false);
   };
 
-  const handleDelete = async () => {
-    const { error } = await supabase.storage.from("homepage-media").remove([filename]);
+  const handleVideoDelete = async () => {
+    const { error } = await supabase.storage
+      .from("homepage-media")
+      .remove([videoFilename]);
     if (error) alert("Delete failed: " + error.message);
     else setVideoUrl("");
   };
 
+  // ------------------- Hero Image Functions -------------------
+  const fetchHeroImages = async () => {
+    const { data, error } = await supabase
+      .storage
+      .from("homepage-media")
+      .list("hero");
+
+    if (error) {
+      console.error("Error fetching images", error.message);
+      return;
+    }
+
+    const urls = await Promise.all(
+      data.map(async (file) => {
+        const { data: publicData } = supabase
+          .storage
+          .from("homepage-media")
+          .getPublicUrl(`hero/${file.name}`);
+        return { name: file.name, url: publicData.publicUrl };
+      })
+    );
+
+    setHeroImages(urls);
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith("image/")) return;
+
+    const filename = `hero/${Date.now()}-${file.name}`;
+
+    setUploadingImage(true);
+    const { error } = await supabase.storage
+      .from("homepage-media")
+      .upload(filename, file, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.type,
+      });
+
+    if (error) alert("Image upload failed: " + error.message);
+    else fetchHeroImages();
+
+    setUploadingImage(false);
+  };
+
+  const handleImageDelete = async (filename) => {
+    const { error } = await supabase.storage
+      .from("homepage-media")
+      .remove([`hero/${filename}`]);
+
+    if (error) alert("Delete failed: " + error.message);
+    else fetchHeroImages();
+  };
+
+  // ------------------- Effect -------------------
+  useEffect(() => {
+    if (activeTab === "home") {
+      fetchVideo();
+      fetchHeroImages();
+    }
+  }, [activeTab]);
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
+    <div className="max-w-6xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold text-center mb-8">📁 Upload Dashboard</h1>
 
       {/* Tabs */}
@@ -85,9 +150,10 @@ const UploadDashboard = () => {
       </div>
 
       <div className="bg-white rounded-lg shadow-lg p-6">
-        {/* Home Tab */}
+        {/* ---------- HOME TAB ---------- */}
         {activeTab === "home" && (
           <>
+            {/* Homepage Video */}
             <h2 className="text-xl font-bold mb-4">📽 Homepage Video</h2>
             {videoUrl && (
               <video
@@ -98,29 +164,59 @@ const UploadDashboard = () => {
                 muted
               />
             )}
-            <div className="flex gap-4 flex-wrap">
+            <div className="flex gap-4 flex-wrap mb-8">
               <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                {uploading ? "Uploading..." : "Upload Video"}
+                {uploadingVideo ? "Uploading..." : "Upload Video"}
                 <input
                   type="file"
                   accept="video/*"
                   className="hidden"
-                  onChange={handleUpload}
+                  onChange={handleVideoUpload}
                 />
               </label>
               {videoUrl && (
                 <button
-                  onClick={handleDelete}
+                  onClick={handleVideoDelete}
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
                 >
                   Delete Video
                 </button>
               )}
             </div>
+
+            {/* Hero Image Slideshow Upload */}
+            <h2 className="text-xl font-bold mb-4">🖼 Advertisement Images</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              {heroImages.map((img) => (
+                <div key={img.name} className="relative group">
+                  <img
+                    src={img.url}
+                    alt={img.name}
+                    className="rounded shadow w-full h-40 object-cover"
+                  />
+                  <button
+                    onClick={() => handleImageDelete(img.name)}
+                    className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                  >
+                    ✖
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <label className="cursor-pointer bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+              {uploadingImage ? "Uploading..." : "Upload Image"}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </label>
           </>
         )}
 
-        {/* Family Tree Tab */}
+        {/* ---------- FAMILY TREE TAB ---------- */}
         {activeTab === "family-tree" && (
           <div>
             <h2 className="text-xl font-bold mb-2">🌳 Family Tree Media</h2>
@@ -128,7 +224,7 @@ const UploadDashboard = () => {
           </div>
         )}
 
-        {/* News & Events Tab */}
+        {/* ---------- NEWS & EVENTS TAB ---------- */}
         {activeTab === "news-events" && (
           <div>
             <h2 className="text-xl font-bold mb-2">📰 News & Events</h2>
