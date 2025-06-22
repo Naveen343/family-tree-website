@@ -38,7 +38,7 @@ const HeroSection = () => {
   useEffect(() => {
     slideInterval.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % images.length);
-    }, 4000);
+    }, 10000);
     return () => clearInterval(slideInterval.current);
   }, [images]);
 
@@ -56,7 +56,7 @@ const HeroSection = () => {
 
   return (
     <section className="relative w-full" style={{ height: "calc(96vh)" }}>
-      <div className="absolute inset-0 bg-black opacity-65 z-10"></div>
+      <div className="absolute inset-0 bg-grey opacity-25 z-10"></div>
 
       {images.map((img, index) => (
         <img
