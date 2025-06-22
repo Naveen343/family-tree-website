@@ -1,98 +1,94 @@
-import logoImage from "../assets/family-logo.jpg";
-import guardian1 from "../assets/family-logo.jpg";
-import guardian2 from "../assets/family-logo.jpg";
-import guardian3 from "../assets/family-logo.jpg";
-import guardian4 from "../assets/family-logo.jpg";
-import spiritualFather1 from "../assets/spone.jpeg";
-import spiritualFather2 from "../assets/sptwo.jpeg";
-import spiritualFather3 from "../assets/spthree.jpeg";
-import spiritualFather4 from "../assets/spfour.jpeg";
+import { useState, useEffect } from "react";
+import supabase from "../lib/supabaseClient";
 import ImageSlider from "./ImageSlider";
+import logoImage from "../assets/family-logo.jpg";
 
+/** helper to pull {src,alt} objects from a bucket folder */
+const fetchImages = async (folder) => {
+  const { data, error } = await supabase
+    .storage
+    .from("homepage-media")
+    .list(folder);
+
+  if (error || !data) {
+    console.error(`Error fetching ${folder}:`, error?.message);
+    return [];
+  }
+
+  return Promise.all(
+    data.map(async (file) => {
+      const { data: pub } = supabase
+        .storage
+        .from("homepage-media")
+        .getPublicUrl(`${folder}/${file.name}`);
+      return { src: pub.publicUrl, alt: file.name };
+    })
+  );
+};
 
 const FamilyTreeOfficial = () => {
-  const spiritualFathers = [
-    { src: spiritualFather1, alt: "Spiritual Father 1" },
-    { src: spiritualFather2, alt: "Spiritual Father 2" },
-    { src: spiritualFather3, alt: "Spiritual Father 3" },
-    { src: spiritualFather4, alt: "Spiritual Father 4" },
-    { src: spiritualFather4, alt: "Spiritual Father 4" },
-    
-  ];
+  // four independent slider groups
+  const [spiritualFathers, setSpiritualFathers] = useState([]);
+  const [guardians,        setGuardians]        = useState([]);
+  const [youthWing,        setYouthWing]        = useState([]);
+  const [committee,        setCommittee]        = useState([]);
 
-  const guardians = [
-    { src: guardian1, alt: "Guardian 1" },
-    { src: guardian2, alt: "Guardian 2" },
-    { src: guardian3, alt: "Guardian 3" },
-    { src: guardian4, alt: "Guardian 4" },
-  ];
+  useEffect(() => {
+    fetchImages("spiritual-fathers").then(setSpiritualFathers);
+    fetchImages("guardians").then(setGuardians);
+    fetchImages("youth-wing").then(setYouthWing);
+    fetchImages("committee-members").then(setCommittee);
+  }, []);
 
-  return (
-    <div className="w-full px-4 py-8">
-      {/* First Row */}
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
-        {/* Left Section */}
-        <div className="w-full lg:basis-5/12 text-center">
-          <h3 className="text-lg font-bold mb-4">
-            Our Spiritual Fathers <br /> ആത്മീയ പിതാക്കന്മാർ
-          </h3>
-          <ImageSlider images={spiritualFathers} />
-        </div>
-
-        {/* Center Section */}
-        <div className="w-full lg:basis-2/12 flex justify-center my-6 lg:my-0 pt-10 flex-col">
-          <img
-            src={logoImage}
-            alt="Family Logo"
-            className="w-58 h-58 object-cover rounded-full"
-          />
-          <h5 className="text-lg font-bold italic mt-3 text-center mr-3">Family Logo</h5>
-        </div>
-
-        {/* Right Section */}
-        <div className="w-full lg:basis-5/12 text-center">
-          <h3 className="text-lg font-bold mb-4">
-            Our Guardians <br /> രക്ഷാധികാരികൾ
-          </h3>
-          <ImageSlider images={guardians} />
-        </div>
+  /* reusable row renderer */
+  const renderRow = (leftTitle, leftImgs, rightTitle, rightImgs) => (
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
+      {/* LEFT slider */}
+      <div className="w-full lg:basis-5/12 text-center">
+        <h3 className="text-lg font-bold mb-4 whitespace-pre-line">{leftTitle}</h3>
+        <ImageSlider images={leftImgs} />
       </div>
 
-      {/* Second Row */}
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-8 pt-20">
-        {/* Left Section */}
-        <div className="w-full lg:basis-5/12 text-center">
-          <h3 className="text-lg font-bold mb-4">
-            Youth Wing - Since 2025 <br />
-            Committee Members : 2025 - 2026 <br />
-            Present Office Bearers
-          </h3>
-          <ImageSlider images={spiritualFathers} />
-        </div>
+      {/* CENTER logo */}
+      <div className="w-full lg:basis-2/12 flex justify-center my-6 lg:my-0 pt-10 flex-col">
+        <img
+          src={logoImage}
+          alt="Family Logo"
+          className="w-58 h-58 object-cover rounded-full"
+        />
+        <h5 className="text-lg font-bold italic mt-3 text-center">Family Logo</h5>
+      </div>
 
-        {/* Center Section */}
-        <div className="w-full lg:basis-2/12 flex justify-center my-6 lg:my-0 pt-10 flex-col">
-          <img
-            src={logoImage}
-            alt="Family Logo"
-            className="w-58 h-58 object-cover rounded-full"
-          />
-          <h5 className="text-lg font-bold italic mt-3 text-center mr-3">Family Logo</h5>
-        </div>
-
-        {/* Right Section */}
-        <div className="w-full lg:basis-5/12 text-center">
-          <h3 className="text-lg font-bold mb-4">
-            Therampu Kudumpa Yogam <br />
-            Committee Members : 2025 - 2026 <br />
-            Present Office Bearers
-          </h3>
-          <ImageSlider images={guardians} />
-        </div>
+      {/* RIGHT slider */}
+      <div className="w-full lg:basis-5/12 text-center">
+        <h3 className="text-lg font-bold mb-4 whitespace-pre-line">{rightTitle}</h3>
+        <ImageSlider images={rightImgs} />
       </div>
     </div>
   );
+
+  return (
+    <div className="w-full px-4 py-8">
+      {/* First row */}
+      {renderRow(
+        "Our Spiritual Fathers\nആത്മീയ പിതാക്കന്മാർ",
+        spiritualFathers,
+        "Our Guardians\nരക്ഷാധികാരികൾ",
+        guardians
+      )}
+
+      {/* Spacer */}
+      <div className="h-20" />
+
+      {/* Second row */}
+      {renderRow(
+        "Youth Wing – Since 2025\nCommittee Members 2025-2026\nPresent Office Bearers",
+        youthWing,
+        "Therampu Kudumpa Yogam\nCommittee Members 2025-2026\nPresent Office Bearers",
+        committee
+      )}
+    </div>
+  );
 };
-  
+
 export default FamilyTreeOfficial;
-  

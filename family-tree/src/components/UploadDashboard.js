@@ -12,6 +12,15 @@ const UploadDashboard = () => {
   const [heroImages, setHeroImages] = useState([]);
   const [uploadingImage, setUploadingImage] = useState(false);
 
+  const sliderFolders = [
+    "spiritual-fathers",
+    "guardians",
+    "youth-wing",
+    "committe-members",
+  ];
+  const [sliderImages, setSliderImages] = useState({});
+  const [uploadingSlider, setUploadingSlider] = useState("");
+
   const videoFilename = "videos/family-video.mp4";
 
   // ------------------- Video Functions -------------------
@@ -60,6 +69,62 @@ const UploadDashboard = () => {
     if (error) alert("Delete failed: " + error.message);
     else setVideoUrl("");
   };
+
+  // ------------------- Slider Image Functions -------------------
+  const fetchSliderImages = async () => {
+    const all = {};
+    for (const folder of sliderFolders) {
+      const { data, error } = await supabase.storage.from("homepage-media").list(folder);
+      if (!error && data.length) {
+        const urls = await Promise.all(
+          data.map(async (file) => {
+            const { data: publicData } = supabase
+              .storage
+              .from("homepage-media")
+              .getPublicUrl(`${folder}/${file.name}`);
+            return { name: file.name, url: publicData.publicUrl };
+          })
+        );
+        all[folder] = urls;
+      } else {
+        all[folder] = [];
+      }
+    }
+    setSliderImages(all);
+  };
+
+  const handleSliderUpload = async (folder, e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith("image/")) return;
+
+    const filename = `${folder}/${Date.now()}-${file.name}`;
+    setUploadingSlider(folder);
+
+    const { error } = await supabase.storage
+      .from("homepage-media")
+      .upload(filename, file, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.type,
+      });
+
+    if (error) alert("Slider image upload failed: " + error.message);
+    else await fetchSliderImages();
+
+    setUploadingSlider("");
+  };
+
+  const handleSliderDelete = async (folder, filename) => {
+    const { error } = await supabase
+      .storage
+      .from("homepage-media")
+      .remove([`${folder}/${filename}`]);
+
+    if (error) alert("Slider image delete failed: " + error.message);
+    else await fetchSliderImages();
+  };
+
+  // ------------------------------------------------------------
 
   // ------------------- Hero Image Functions -------------------
   const fetchHeroImages = async () => {
@@ -121,6 +186,7 @@ const UploadDashboard = () => {
     if (activeTab === "home") {
       fetchVideo();
       fetchHeroImages();
+      fetchSliderImages();
     }
   }, [activeTab]);
 
@@ -213,6 +279,44 @@ const UploadDashboard = () => {
                 onChange={handleImageUpload}
               />
             </label>
+
+            {/* ---------- Slider Image Uploads ---------- */}
+            <h2 className="text-xl font-bold mb-6 mt-10">🖼 Slider Images</h2>
+            {sliderFolders.map((folder) => (
+              <div key={folder} className="mb-8">
+                <h3 className="text-lg font-semibold mb-2 capitalize">
+                  📂 {folder.replace(/-/g, " ")}
+                </h3>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                  {sliderImages[folder]?.map((img) => (
+                    <div key={img.name} className="relative group">
+                      <img
+                        src={img.url}
+                        alt={img.name}
+                        className="rounded shadow w-full h-36 object-cover"
+                      />
+                      <button
+                        onClick={() => handleSliderDelete(folder, img.name)}
+                        className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                      >
+                        ✖
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                <label className="cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
+                  {uploadingSlider === folder ? "Uploading..." : "Upload Image"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleSliderUpload(folder, e)}
+                  />
+                </label>
+              </div>
+            ))}
           </>
         )}
 
