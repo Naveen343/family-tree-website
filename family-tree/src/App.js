@@ -11,6 +11,7 @@ import NewsSlider from "./components/NewsSlider";
 import FamilyTeamOfficial from "./components/FamilyTeamOfficial";
 import NotFound from "./pages/not-found";
 import UploadDashboard from "./pages/uploads";
+import NewsEvents from "./pages/news-events";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ function App() {
           <Route path="/contact" element={<div>Contact Page (Coming Soon)</div>} />
           <Route path="*" element={<NotFound />} />
           <Route path="/uploads" element={<UploadDashboard />} />
+          <Route path="/news-events" element={<NewsEvents />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

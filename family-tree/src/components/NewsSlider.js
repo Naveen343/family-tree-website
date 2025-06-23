@@ -1,4 +1,30 @@
+import { useState, useEffect } from "react";
+import supabase from "../lib/supabaseClient"; // adjust path if needed
+
 export default function NewsSlider() {
+  const [newsItems, setNewsItems] = useState([]);
+
+  const fetchNews = async () => {
+    const { data, error } = await supabase
+      .from("news")
+      .select("id, title, link")
+      .eq("published", true)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching news:", error.message);
+      return;
+    }
+
+    setNewsItems(data);
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  if (!newsItems.length) return null;
+
   return (
     <div
       id="running-slider"
@@ -8,25 +34,18 @@ export default function NewsSlider() {
         id="running-slider-floating-content"
         className="flex gap-8 animate-marquee whitespace-nowrap"
       >
-        <div className="running-slider-single-news">
-          <a
-            href="https://pulikunnelkudumbayogam.com/..."
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            sample contents, therampu family
-          </a>
-        </div>
-        <div className="running-slider-single-news">
-          <a
-            href="https://pulikunnelkudumbayogam.com/..."
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            എന്‍റെ കുടുംബം എത്ര മനോഹരം
-          </a>
-        </div>
-        {/* Add more items here */}
+        {newsItems.map((item) => (
+          <div key={item.id} className="running-slider-single-news">
+            <a
+              href="/news-events"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {item.title}
+            </a>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -23,6 +23,13 @@ const UploadDashboard = () => {
 
   const videoFilename = "videos/family-video.mp4";
 
+  // News state
+  const [newsList, setNewsList] = useState([]);
+  const [newNews, setNewNews] = useState({ title: "", description: "", published: false });
+  const [editingId, setEditingId] = useState(null);
+  const [loadingNews, setLoadingNews] = useState(false);
+
+
   // ------------------- Video Functions -------------------
   const fetchVideo = async () => {
     const { data, error } = await supabase
@@ -181,12 +188,77 @@ const UploadDashboard = () => {
     else fetchHeroImages();
   };
 
+  // ---------------- News & Events ----------------
+
+  const fetchNews = async () => {
+    setLoadingNews(true);
+    const { data, error } = await supabase.from("news").select("*").order("created_at", { ascending: false });
+  
+    if (error) {
+      console.error("Error fetching news:", error.message);
+    } else {
+      setNewsList(data);
+    }
+    setLoadingNews(false);
+  };
+
+  const handleNewsSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (editingId) {
+      const { error } = await supabase
+        .from("news")
+        .update(newNews)
+        .eq("id", editingId);
+  
+      if (error) return alert("Update failed: " + error.message);
+    } else {
+      const { error } = await supabase
+        .from("news")
+        .insert([newNews]);
+  
+      if (error) {
+          console.error("Insert error:", error);
+          alert("Insert failed: " + (error.message || "Unknown error"));
+          return;
+        }
+    }
+  
+    setNewNews({ title: "", description: "", published: false });
+    setEditingId(null);
+    fetchNews();
+  };
+
+  const handleDeleteNews = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete this news item?");
+    if (!confirmed) return;
+  
+    const { error } = await supabase.from("news").delete().eq("id", id);
+    if (error) {
+      alert("Delete failed: " + error.message);
+    } else {
+      fetchNews();
+    }
+  };
+  
+
+  const handleEditNews = (item) => {
+    setNewNews({
+      title: item.title,
+      description: item.description,
+      published: item.published,
+    });
+    setEditingId(item.id);
+  };
+    
+
   // ------------------- Effect -------------------
   useEffect(() => {
     if (activeTab === "home") {
       fetchVideo();
       fetchHeroImages();
       fetchSliderImages();
+      fetchNews();
     }
   }, [activeTab]);
 
@@ -331,9 +403,94 @@ const UploadDashboard = () => {
         {/* ---------- NEWS & EVENTS TAB ---------- */}
         {activeTab === "news-events" && (
           <div>
-            <h2 className="text-xl font-bold mb-2">📰 News & Events</h2>
-            <p className="text-gray-600">Media upload for news and event highlights will go here.</p>
-          </div>
+          <h2 className="text-xl font-bold mb-4">📰 Manage News & Events</h2>
+        
+          {/* Form */}
+          <form onSubmit={handleNewsSubmit} className="bg-gray-100 p-4 rounded shadow mb-6">
+            <div className="mb-2">
+              <label className="block font-medium">Title</label>
+              <input
+                type="text"
+                className="w-full border rounded px-3 py-2"
+                value={newNews.title}
+                onChange={(e) => setNewNews({ ...newNews, title: e.target.value })}
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block font-medium">Description</label>
+              <textarea
+                className="w-full border rounded px-3 py-2"
+                rows={4}
+                value={newNews.description}
+                onChange={(e) => setNewNews({ ...newNews, description: e.target.value })}
+                required
+              />
+            </div>
+            <div className="flex items-center gap-2 mb-4">
+              <input
+                type="checkbox"
+                checked={newNews.published}
+                onChange={(e) => setNewNews({ ...newNews, published: e.target.checked })}
+              />
+              <label>Published</label>
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              {editingId ? "Update" : "Create"} News
+            </button>
+            {editingId && (
+              <button
+                type="button"
+                className="ml-2 px-3 py-2 rounded bg-gray-500 text-white hover:bg-gray-600"
+                onClick={() => {
+                  setNewNews({ title: "", description: "", published: false });
+                  setEditingId(null);
+                }}
+              >
+                Cancel
+              </button>
+            )}
+          </form>
+        
+          {/* News List */}
+          {loadingNews ? (
+            <p>Loading news...</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {newsList.map((item) => (
+                <div key={item.id} className="border rounded shadow p-4 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-bold mb-2">{item.title}</h3>
+                    <p className="text-sm text-gray-700 mb-4 line-clamp-4">{item.description}</p>
+                    <p className="text-xs text-gray-500">
+                      Status:{" "}
+                      <span className={`font-medium ${item.published ? "text-green-600" : "text-red-600"}`}>
+                        {item.published ? "Published" : "Draft"}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      onClick={() => handleEditNews(item)}
+                      className="text-blue-600 hover:underline text-sm"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteNews(item.id)}
+                      className="text-red-600 hover:underline text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>        
         )}
       </div>
     </div>
