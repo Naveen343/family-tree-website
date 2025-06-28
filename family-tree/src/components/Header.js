@@ -158,7 +158,7 @@ const Header = () => {
 
             <li>
               <Link to="/news-events">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/news-events" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   News & Events
                 </span>
               </Link>

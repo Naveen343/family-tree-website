@@ -26,6 +26,20 @@ export default function NewsSlider() {
   if (!newsItems.length) return null;
 
   return (
+    <>
+    <div
+      id="running-slider"
+      className="fixed top-20 left-0 w-full z-40 overflow-hidden bg-primary text-white py-2 px-4 text-sm md:hidden"
+    >
+      <div
+        id="running-slider-floating-content"
+        className="flex gap-8 animate-marquee whitespace-nowrap"
+      >
+        Tradition, Lineage, Ancestors : Key to deep family bonds. പാരമ്പര്യം, വംശം, പൂർവ്വികർ : ആഴത്തിലുള്ള കുടുംബബന്ധങ്ങളുടെ താക്കോൽ.
+      </div>
+    </div>
+
+    
     <div
       id="running-slider"
       className="fixed bottom-0 left-0 w-full z-50 overflow-hidden bg-primary text-white py-2 px-4 text-sm"
@@ -48,5 +62,6 @@ export default function NewsSlider() {
         ))}
       </div>
     </div>
+    </>
   );
 }

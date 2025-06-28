@@ -97,7 +97,7 @@ const HeroSection = () => {
       </div>
 
       {/* QUOTE BOX */}
-      <div className="absolute bottom-16 italic font-serif left-6 md:left-12 w-[340px] md:w-[400px] h-auto bg-opacity-100 p-4 text-base md:text-2xl font-bold z-20 text-white">
+      <div className="hidden md:block absolute bottom-16 italic font-serif left-6 md:left-12 w-[340px] md:w-[400px] h-auto bg-opacity-100 p-4 text-base md:text-2xl font-bold z-20 text-white">
         <div>
           Tradition, Lineage, Ancestors :<br />
           Key to deep family bonds.<br />
