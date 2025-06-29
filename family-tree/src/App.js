@@ -12,6 +12,8 @@ import FamilyTeamOfficial from "./components/FamilyTeamOfficial";
 import NotFound from "./pages/not-found";
 import UploadDashboard from "./pages/uploads";
 import NewsEvents from "./pages/news-events";
+import FamilyTree from "./pages/family-tree";
+
 
 const queryClient = new QueryClient();
 
@@ -37,12 +39,12 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/family-tree" element={<div>Family Tree Page (Coming Soon)</div>} />
           <Route path="/about" element={<div>About Page (Coming Soon)</div>} />
           <Route path="/contact" element={<div>Contact Page (Coming Soon)</div>} />
           <Route path="*" element={<NotFound />} />
           <Route path="/uploads" element={<UploadDashboard />} />
           <Route path="/news-events" element={<NewsEvents />} />
+          <Route path="/family-tree" element={<FamilyTree />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

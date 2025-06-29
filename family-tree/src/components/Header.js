@@ -165,21 +165,21 @@ const Header = () => {
             </li>
             <li>
               <Link to="/charity">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/charity" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Charity
                 </span>
               </Link>
             </li>
             <li>
               <Link to="/academics">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/academics" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Academics
                 </span>
               </Link>
             </li>
             <li>
               <Link to="/family-matrimony">
-                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-tree" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
+                <span className={`text-lg hover:text-yellow-500 transition-colors duration-200 cursor-pointer ${location === "/family-matrimony" ? "text-yellow-500 border-b-2 border-text-yellow-500" : isScrolled ? "text-white" : "text-white"}`}>
                   Family Matrimony
                 </span>
               </Link>
