@@ -58,7 +58,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/family-tree">
+                <Link to="/family-tree">
                   <span className="text-white/80 hover:text-secondary transition-colors duration-200 cursor-pointer">
                     Family Tree
                   </span>
