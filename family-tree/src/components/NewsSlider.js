@@ -29,7 +29,7 @@ export default function NewsSlider() {
     <>
     <div
       id="running-slider"
-      className="fixed top-20 left-0 w-full z-40 overflow-hidden bg-primary text-white py-2 px-4 text-sm md:hidden"
+      className="fixed top-20 left-0 w-full z-40 overflow-hidden bg-[#16202B] text-white py-2 px-4 text-sm md:hidden"
     >
       <div
         id="running-slider-floating-content"
@@ -42,7 +42,7 @@ export default function NewsSlider() {
     
     <div
       id="running-slider"
-      className="fixed bottom-0 left-0 w-full z-50 overflow-hidden bg-primary text-white py-2 px-4 text-sm"
+      className="fixed bottom-0 left-0 w-full z-50 overflow-hidden bg-[#16202B] text-white py-2 px-4 text-md"
     >
       <div
         id="running-slider-floating-content"

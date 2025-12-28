@@ -13,6 +13,11 @@ import NotFound from "./pages/not-found";
 import UploadDashboard from "./pages/uploads";
 import NewsEvents from "./pages/news-events";
 import FamilyTree from "./pages/family-tree";
+import FamilyHistory from "./pages/family-history";
+import FamilyBranches from "./pages/family-branches";
+import FamilyByLaw from "./pages/family-bylaw";
+
+
 
 
 const queryClient = new QueryClient();
@@ -45,6 +50,9 @@ function App() {
           <Route path="/uploads" element={<UploadDashboard />} />
           <Route path="/news-events" element={<NewsEvents />} />
           <Route path="/family-tree" element={<FamilyTree />} />
+          <Route path="/family-history" element={<FamilyHistory />} />
+          <Route path="/family-branches" element={<FamilyBranches />} />
+          <Route path="/family-bylaw" element={<FamilyByLaw />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
