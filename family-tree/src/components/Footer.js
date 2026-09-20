@@ -31,14 +31,14 @@ const Footer = () => {
             </p>
             <div className="flex space-x-3 mt-5">
               {SOCIALS.map(({ icon: Icon, label }) => (
-                <a
+                <button
                   key={label}
-                  href="#"
+                  type="button"
                   className="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 text-white/80 hover:bg-secondary hover:text-[#16202B] transition-colors duration-200"
                   aria-label={label}
                 >
                   <Icon size={16} />
-                </a>
+                </button>
               ))}
             </div>
           </div>

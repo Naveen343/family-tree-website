@@ -25,6 +25,8 @@ export default function FamilyByLaw() {
       setPdfDoc(pdf);
       renderPage(1, pdf);
     });
+    // Load the PDF once on mount; renderPage is redefined every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderPage = (num, pdf = pdfDoc, newScale = scale) => {

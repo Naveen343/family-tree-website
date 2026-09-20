@@ -35,7 +35,7 @@ const UploadDashboard = () => {
 
   // ------------------- Video Functions -------------------
   const fetchVideo = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .storage
       .from("homepage-media")
       .list("videos", { search: "family-video.mp4" });
@@ -263,6 +263,8 @@ const UploadDashboard = () => {
       fetchSliderImages();
       fetchNews();
     }
+    // The fetch helpers are recreated every render; only re-run when the tab changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   const tabLabels = {
