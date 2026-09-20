@@ -1,6 +1,7 @@
 import commonImage from "../assets/common-logo.png";
 import Header from "../components/Header";
-
+import Footer from "../components/Footer";
+import PageHero from "../components/PageHero";
 
 const branches = [
   {
@@ -43,56 +44,47 @@ const branches = [
 export default function FamilyBranches() {
   return (
     <>
-    <Header />
-    <div className="bg-[#16202B] min-h-screen text-white mt-16">
-      {/* Hero */}
-      <section className="bg-[#1E2A36] text-center py-16 px-6">
-        <h1 className="text-4xl md:text-5xl font-bold text-secondary">
-          Our Family Branches
-        </h1>
-        <p className="mt-4 text-lg max-w-3xl mx-auto">
-          The family tree spreads across seven distinct branches — each carrying
-          forward its own traditions, values, and stories.
-        </p>
-      </section>
+      <Header />
+      <div className="bg-[#16202B] min-h-screen text-white mt-16">
+        <PageHero
+          eyebrow="Seven roots, one family"
+          title="Our Family Branches"
+          subtitle="The family tree spreads across seven distinct branches — each carrying forward its own traditions, values, and stories."
+        />
 
-      {/* Branch Sections */}
-      <div className="max-w-6xl mx-auto px-6 py-12 space-y-16">
-        {branches.map((branch, idx) => (
-          <section
-            key={branch.name}
-            className={`flex flex-col md:flex-row items-center gap-8 ${
-              idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-            }`}
-          >
-            {/* Text */}
-            <div className="flex-1">
-              <h2 className="text-2xl font-semibold text-secondary mb-4">
-                {branch.name}
-              </h2>
-              <p className="leading-relaxed">{branch.description}</p>
-            </div>
+        <div className="max-w-6xl mx-auto px-6 py-16 space-y-16">
+          {branches.map((branch, idx) => (
+            <section
+              key={branch.name}
+              className={`flex flex-col md:flex-row items-center gap-10 ${
+                idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+              }`}
+            >
+              <div className="flex-1">
+                <span className="text-secondary/60 font-heading text-5xl font-bold">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+                <h2 className="text-2xl md:text-3xl font-heading font-semibold text-secondary mt-2 mb-4">
+                  {branch.name}
+                </h2>
+                <p className="leading-relaxed text-gray-300">{branch.description}</p>
+              </div>
 
-            {/* Images */}
-            <div className="flex-1 grid grid-cols-2 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <img
-                  key={i}
-                  src={commonImage}
-                  alt={`${branch.name} ${i}`}
-                  className="rounded-xl shadow-md object-cover"
-                />
-              ))}
-            </div>
-          </section>
-        ))}
+              <div className="flex-1 grid grid-cols-2 gap-4 w-full">
+                {[1, 2, 3, 4].map((i) => (
+                  <img
+                    key={i}
+                    src={commonImage}
+                    alt={`${branch.name} ${i}`}
+                    className="rounded-xl shadow-lg shadow-black/30 border border-white/5 object-cover aspect-square"
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
       </div>
-
-      {/* Footer */}
-      <footer className="text-center py-8 text-sm text-gray-400">
-        © {new Date().getFullYear()} Therampu Kudumbam. All Rights Reserved.
-      </footer>
-    </div>
+      <Footer />
     </>
   );
 }

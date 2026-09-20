@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import supabase from "../lib/supabaseClient";
+import CommunityPostsAdmin from "./admin/CommunityPostsAdmin";
+import MatrimonyAdmin from "./admin/MatrimonyAdmin";
 
 const UploadDashboard = () => {
   const [activeTab, setActiveTab] = useState("home");
@@ -262,236 +265,280 @@ const UploadDashboard = () => {
     }
   }, [activeTab]);
 
+  const tabLabels = {
+    home: "Home",
+    "family-tree": "Family Tree",
+    "news-events": "News & Events",
+    charity: "Charity",
+    academics: "Academics",
+    matrimony: "Matrimony",
+  };
+  const inputClasses =
+    "w-full bg-[#16202B] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-secondary";
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold text-center mb-8">📁 Upload Dashboard</h1>
+    <div className="bg-[#16202B] min-h-screen text-white mt-16">
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <p className="uppercase tracking-[0.25em] text-secondary/80 text-xs font-semibold mb-3">
+            Admin
+          </p>
+          <h1 className="text-3xl font-heading font-bold text-secondary">Upload Dashboard</h1>
+        </div>
 
-      {/* Tabs */}
-      <div className="flex justify-center space-x-4 mb-6">
-        {["home", "family-tree", "news-events"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-full font-semibold transition duration-300 ${
-              activeTab === tab
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
-          >
-            {tab === "home"
-              ? "Home"
-              : tab === "family-tree"
-              ? "Family Tree"
-              : "News & Events"}
-          </button>
-        ))}
-      </div>
+        {/* Tabs */}
+        <div className="flex justify-center flex-wrap gap-3 mb-8">
+          {["home", "family-tree", "news-events", "charity", "academics", "matrimony"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-2 rounded-full font-semibold transition duration-300 ${
+                activeTab === tab
+                  ? "bg-secondary text-[#16202B]"
+                  : "bg-white/5 text-gray-300 hover:bg-white/10"
+              }`}
+            >
+              {tabLabels[tab]}
+            </button>
+          ))}
+        </div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        {/* ---------- HOME TAB ---------- */}
-        {activeTab === "home" && (
-          <>
-            {/* Homepage Video */}
-            <h2 className="text-xl font-bold mb-4">📽 Homepage Video</h2>
-            {videoUrl && (
-              <video
-                className="mb-4 w-full max-w-md rounded shadow"
-                src={videoUrl}
-                controls
-                loop
-                muted
-              />
-            )}
-            <div className="flex gap-4 flex-wrap mb-8">
-              <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-                {uploadingVideo ? "Uploading..." : "Upload Video"}
+        <div className="bg-[#1E2A36] border border-white/5 rounded-2xl shadow-xl p-6 md:p-8">
+          {/* ---------- HOME TAB ---------- */}
+          {activeTab === "home" && (
+            <>
+              {/* Homepage Video */}
+              <h2 className="text-xl font-heading font-semibold mb-4 text-secondary">
+                Homepage Video
+              </h2>
+              {videoUrl && (
+                <video
+                  className="mb-4 w-full max-w-md rounded-lg shadow-lg border border-white/10"
+                  src={videoUrl}
+                  controls
+                  loop
+                  muted
+                />
+              )}
+              <div className="flex gap-4 flex-wrap mb-10">
+                <label className="cursor-pointer bg-secondary text-[#16202B] font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition">
+                  {uploadingVideo ? "Uploading..." : "Upload Video"}
+                  <input
+                    type="file"
+                    accept="video/*"
+                    className="hidden"
+                    onChange={handleVideoUpload}
+                  />
+                </label>
+                {videoUrl && (
+                  <button
+                    onClick={handleVideoDelete}
+                    className="bg-red-500/90 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
+                  >
+                    Delete Video
+                  </button>
+                )}
+              </div>
+
+              {/* Hero Image Slideshow Upload */}
+              <h2 className="text-xl font-heading font-semibold mb-4 text-secondary">
+                Advertisement Images
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                {heroImages.map((img) => (
+                  <div key={img.name} className="relative group">
+                    <img
+                      src={img.url}
+                      alt={img.name}
+                      className="rounded-lg shadow border border-white/10 w-full h-40 object-cover"
+                    />
+                    <button
+                      onClick={() => handleImageDelete(img.name)}
+                      className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                    >
+                      ✖
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <label className="cursor-pointer bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition">
+                {uploadingImage ? "Uploading..." : "Upload Image"}
                 <input
                   type="file"
-                  accept="video/*"
+                  accept="image/*"
                   className="hidden"
-                  onChange={handleVideoUpload}
+                  onChange={handleImageUpload}
                 />
               </label>
-              {videoUrl && (
-                <button
-                  onClick={handleVideoDelete}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                >
-                  Delete Video
-                </button>
-              )}
-            </div>
 
-            {/* Hero Image Slideshow Upload */}
-            <h2 className="text-xl font-bold mb-4">🖼 Advertisement Images</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              {heroImages.map((img) => (
-                <div key={img.name} className="relative group">
-                  <img
-                    src={img.url}
-                    alt={img.name}
-                    className="rounded shadow w-full h-40 object-cover"
-                  />
-                  <button
-                    onClick={() => handleImageDelete(img.name)}
-                    className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
-                  >
-                    ✖
-                  </button>
+              {/* ---------- Slider Image Uploads ---------- */}
+              <h2 className="text-xl font-heading font-semibold mb-6 mt-12 text-secondary">
+                Slider Images
+              </h2>
+              {sliderFolders.map((folder) => (
+                <div key={folder} className="mb-8">
+                  <h3 className="text-base font-semibold mb-3 capitalize text-white/90">
+                    {folder.replace(/-/g, " ")}
+                  </h3>
+
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                    {sliderImages[folder]?.map((img) => (
+                      <div key={img.name} className="relative group">
+                        <img
+                          src={img.url}
+                          alt={img.name}
+                          className="rounded-lg shadow border border-white/10 w-full h-36 object-cover"
+                        />
+                        <button
+                          onClick={() => handleSliderDelete(folder, img.name)}
+                          className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                        >
+                          ✖
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <label className="cursor-pointer bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition">
+                    {uploadingSlider === folder ? "Uploading..." : "Upload Image"}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleSliderUpload(folder, e)}
+                    />
+                  </label>
                 </div>
               ))}
+            </>
+          )}
+
+          {/* ---------- FAMILY TREE TAB ---------- */}
+          {activeTab === "family-tree" && (
+            <div>
+              <h2 className="text-xl font-heading font-semibold mb-2 text-secondary">
+                Family Tree
+              </h2>
+              <p className="text-gray-400">
+                Family members are managed on the tree itself now — open{" "}
+                <Link to="/family-tree" className="text-secondary hover:underline">
+                  the Family Tree page
+                </Link>
+                , select (or search for) a person, and use Add Child, Add Spouse, Edit or Delete in
+                the detail panel. New installs still start from{" "}
+                <code className="text-secondary">api/supabase/sql/family_members_seed.sql</code>.
+              </p>
             </div>
+          )}
 
-            <label className="cursor-pointer bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
-              {uploadingImage ? "Uploading..." : "Upload Image"}
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </label>
+          {/* ---------- NEWS & EVENTS TAB ---------- */}
+          {activeTab === "news-events" && (
+            <div>
+              <h2 className="text-xl font-heading font-semibold mb-4 text-secondary">
+                Manage News & Events
+              </h2>
 
-            {/* ---------- Slider Image Uploads ---------- */}
-            <h2 className="text-xl font-bold mb-6 mt-10">🖼 Slider Images</h2>
-            {sliderFolders.map((folder) => (
-              <div key={folder} className="mb-8">
-                <h3 className="text-lg font-semibold mb-2 capitalize">
-                  📂 {folder.replace(/-/g, " ")}
-                </h3>
+              {/* Form */}
+              <form onSubmit={handleNewsSubmit} className="bg-[#16202B] border border-white/5 p-4 rounded-xl shadow mb-6">
+                <div className="mb-3">
+                  <label className="block font-medium mb-1 text-white/90">Title</label>
+                  <input
+                    type="text"
+                    className={inputClasses}
+                    value={newNews.title}
+                    onChange={(e) => setNewNews({ ...newNews, title: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="block font-medium mb-1 text-white/90">Description</label>
+                  <textarea
+                    className={inputClasses}
+                    rows={4}
+                    value={newNews.description}
+                    onChange={(e) => setNewNews({ ...newNews, description: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <input
+                    type="checkbox"
+                    checked={newNews.published}
+                    onChange={(e) => setNewNews({ ...newNews, published: e.target.checked })}
+                  />
+                  <label className="text-white/90">Published</label>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-secondary text-[#16202B] font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition"
+                >
+                  {editingId ? "Update" : "Create"} News
+                </button>
+                {editingId && (
+                  <button
+                    type="button"
+                    className="ml-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition"
+                    onClick={() => {
+                      setNewNews({ title: "", description: "", published: false });
+                      setEditingId(null);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                )}
+              </form>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
-                  {sliderImages[folder]?.map((img) => (
-                    <div key={img.name} className="relative group">
-                      <img
-                        src={img.url}
-                        alt={img.name}
-                        className="rounded shadow w-full h-36 object-cover"
-                      />
-                      <button
-                        onClick={() => handleSliderDelete(folder, img.name)}
-                        className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
-                      >
-                        ✖
-                      </button>
+              {/* News List */}
+              {loadingNews ? (
+                <p className="text-gray-400">Loading news...</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {newsList.map((item) => (
+                    <div
+                      key={item.id}
+                      className="border border-white/5 bg-[#16202B] rounded-xl shadow p-4 flex flex-col justify-between"
+                    >
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2 text-white">{item.title}</h3>
+                        <p className="text-sm text-gray-400 mb-4 line-clamp-4">{item.description}</p>
+                        <p className="text-xs text-gray-500">
+                          Status:{" "}
+                          <span className={`font-medium ${item.published ? "text-emerald-400" : "text-red-400"}`}>
+                            {item.published ? "Published" : "Draft"}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="flex gap-4 mt-4">
+                        <button
+                          onClick={() => handleEditNews(item)}
+                          className="text-secondary hover:underline text-sm"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteNews(item.id)}
+                          className="text-red-400 hover:underline text-sm"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
-
-                <label className="cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
-                  {uploadingSlider === folder ? "Uploading..." : "Upload Image"}
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleSliderUpload(folder, e)}
-                  />
-                </label>
-              </div>
-            ))}
-          </>
-        )}
-
-        {/* ---------- FAMILY TREE TAB ---------- */}
-        {activeTab === "family-tree" && (
-          <div>
-            <h2 className="text-xl font-bold mb-2">🌳 Family Tree Media</h2>
-            <p className="text-gray-600">Media upload for the family tree section will go here.</p>
-          </div>
-        )}
-
-        {/* ---------- NEWS & EVENTS TAB ---------- */}
-        {activeTab === "news-events" && (
-          <div>
-          <h2 className="text-xl font-bold mb-4">📰 Manage News & Events</h2>
-        
-          {/* Form */}
-          <form onSubmit={handleNewsSubmit} className="bg-gray-100 p-4 rounded shadow mb-6">
-            <div className="mb-2">
-              <label className="block font-medium">Title</label>
-              <input
-                type="text"
-                className="w-full border rounded px-3 py-2"
-                value={newNews.title}
-                onChange={(e) => setNewNews({ ...newNews, title: e.target.value })}
-                required
-              />
-            </div>
-            <div className="mb-2">
-              <label className="block font-medium">Description</label>
-              <textarea
-                className="w-full border rounded px-3 py-2"
-                rows={4}
-                value={newNews.description}
-                onChange={(e) => setNewNews({ ...newNews, description: e.target.value })}
-                required
-              />
-            </div>
-            <div className="flex items-center gap-2 mb-4">
-              <input
-                type="checkbox"
-                checked={newNews.published}
-                onChange={(e) => setNewNews({ ...newNews, published: e.target.checked })}
-              />
-              <label>Published</label>
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              {editingId ? "Update" : "Create"} News
-            </button>
-            {editingId && (
-              <button
-                type="button"
-                className="ml-2 px-3 py-2 rounded bg-gray-500 text-white hover:bg-gray-600"
-                onClick={() => {
-                  setNewNews({ title: "", description: "", published: false });
-                  setEditingId(null);
-                }}
-              >
-                Cancel
-              </button>
-            )}
-          </form>
-        
-          {/* News List */}
-          {loadingNews ? (
-            <p>Loading news...</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {newsList.map((item) => (
-                <div key={item.id} className="border rounded shadow p-4 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-700 mb-4 line-clamp-4">{item.description}</p>
-                    <p className="text-xs text-gray-500">
-                      Status:{" "}
-                      <span className={`font-medium ${item.published ? "text-green-600" : "text-red-600"}`}>
-                        {item.published ? "Published" : "Draft"}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    <button
-                      onClick={() => handleEditNews(item)}
-                      className="text-blue-600 hover:underline text-sm"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteNews(item.id)}
-                      className="text-red-600 hover:underline text-sm"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
+              )}
             </div>
           )}
-        </div>        
-        )}
+
+          {/* ---------- CHARITY TAB ---------- */}
+          {activeTab === "charity" && <CommunityPostsAdmin category="charity" label="Charity" />}
+
+          {/* ---------- ACADEMICS TAB ---------- */}
+          {activeTab === "academics" && <CommunityPostsAdmin category="academics" label="Academics" />}
+
+          {/* ---------- MATRIMONY TAB ---------- */}
+          {activeTab === "matrimony" && <MatrimonyAdmin />}
+        </div>
       </div>
     </div>
   );

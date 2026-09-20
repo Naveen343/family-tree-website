@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import familyPDF from "../assets/test.pdf";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
@@ -121,8 +123,13 @@ export default function FamilyByLaw() {
   const handleMouseUp = () => setIsDragging(false);
 
   return (
-    <div className="bg-[#16202B] min-h-screen text-white flex flex-col items-center py-6 px-3 sm:px-6">
-      <h1 className="text-3xl sm:text-4xl font-bold text-secondary mb-6 text-center">
+    <>
+    <Header />
+    <div className="bg-[#16202B] min-h-screen text-white flex flex-col items-center pt-24 pb-12 px-3 sm:px-6">
+      <p className="uppercase tracking-[0.25em] text-secondary/80 text-xs font-semibold mb-3">
+        Governing document
+      </p>
+      <h1 className="text-3xl sm:text-4xl font-heading font-bold text-secondary mb-8 text-center">
         Family By-Law
       </h1>
 
@@ -192,5 +199,7 @@ export default function FamilyByLaw() {
         Page {pageNum} of {pdfDoc ? pdfDoc.numPages : "…"}
       </p>
     </div>
+    <Footer />
+    </>
   );
 }

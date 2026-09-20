@@ -5,26 +5,29 @@ const ImageSlider = ({ images }) => {
   const [fade, setFade] = useState(true);
 
   useEffect(() => {
+    if (images.length <= 2) return;
     const interval = setInterval(() => {
-      setFade(false); // Start fade-out
-
+      setFade(false);
       setTimeout(() => {
-        // Move to next pair or remaining one
         const nextIndex = startIndex + 2 < images.length ? startIndex + 2 : 0;
         setStartIndex(nextIndex);
-        setFade(true); // Fade-in new images
+        setFade(true);
       }, 200);
     }, 4000);
 
     return () => clearInterval(interval);
   }, [startIndex, images.length]);
 
-  const getCurrentSlide = () => {
-    // Handle last slide when odd number
-    if (startIndex + 1 === images.length) {
-      return [images[startIndex]];
-    }
+  if (!images.length) {
+    return (
+      <div className="flex items-center justify-center h-40 rounded-xl border border-dashed border-white/15 text-white/40 text-sm">
+        No photos yet
+      </div>
+    );
+  }
 
+  const getCurrentSlide = () => {
+    if (startIndex + 1 === images.length) return [images[startIndex]];
     return images.slice(startIndex, startIndex + 2);
   };
 
@@ -41,7 +44,7 @@ const ImageSlider = ({ images }) => {
           key={index}
           src={img.src}
           alt={img.alt}
-          className="w-60 h-68 object-cover rounded"
+          className="w-56 h-64 object-cover rounded-xl shadow-lg shadow-black/30 border border-white/10"
         />
       ))}
     </div>

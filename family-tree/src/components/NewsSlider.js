@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import supabase from "../lib/supabaseClient"; // adjust path if needed
+import { Megaphone } from "lucide-react";
+import supabase from "../lib/supabaseClient";
 
 export default function NewsSlider() {
   const [newsItems, setNewsItems] = useState([]);
@@ -26,42 +27,15 @@ export default function NewsSlider() {
   if (!newsItems.length) return null;
 
   return (
-    <>
-    <div
-      id="running-slider"
-      className="fixed top-20 left-0 w-full z-40 overflow-hidden bg-[#16202B] text-white py-2 px-4 text-sm md:hidden"
-    >
-      <div
-        id="running-slider-floating-content"
-        className="flex gap-8 animate-marquee whitespace-nowrap"
-      >
-        Tradition, Lineage, Ancestors : Key to deep family bonds. പാരമ്പര്യം, വംശം, പൂർവ്വികർ : ആഴത്തിലുള്ള കുടുംബബന്ധങ്ങളുടെ താക്കോൽ.
-      </div>
-    </div>
-
-    
-    <div
-      id="running-slider"
-      className="fixed bottom-0 left-0 w-full z-50 overflow-hidden bg-[#16202B] text-white py-2 px-4 text-md"
-    >
-      <div
-        id="running-slider-floating-content"
-        className="flex gap-8 animate-marquee whitespace-nowrap"
-      >
+    <div className="sticky top-[57px] md:top-[61px] z-40 overflow-hidden bg-[#0e161e] border-b border-white/10 text-white py-2 px-4 text-sm">
+      <div className="flex gap-8 animate-marquee whitespace-nowrap items-center">
+        <Megaphone size={14} className="text-secondary shrink-0" />
         {newsItems.map((item) => (
-          <div key={item.id} className="running-slider-single-news">
-            <a
-              href="/news-events"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              {item.title}
-            </a>
-          </div>
+          <a key={item.id} href="/news-events" className="hover:text-secondary transition-colors">
+            {item.title}
+          </a>
         ))}
       </div>
     </div>
-    </>
   );
 }
