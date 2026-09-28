@@ -3,6 +3,7 @@ import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
 import familyPDF from "../assets/test.pdf";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import supabase from "../lib/supabaseClient";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.js`;
 
@@ -13,6 +14,7 @@ export default function FamilyByLaw() {
   const [pageNum, setPageNum] = useState(1);
   const [scale, setScale] = useState(1.2);
   const renderTaskRef = useRef(null);
+  const [isPlaceholder, setIsPlaceholder] = useState(false);
 
   // Pan state
   const [isDragging, setIsDragging] = useState(false);
@@ -20,11 +22,29 @@ export default function FamilyByLaw() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const loadingTask = pdfjsLib.getDocument(familyPDF);
-    loadingTask.promise.then((pdf) => {
-      setPdfDoc(pdf);
-      renderPage(1, pdf);
-    });
+    const loadFromStorage = async () => {
+      const { data } = await supabase.storage
+        .from("homepage-media")
+        .list("documents", { search: "family-bylaw.pdf" });
+      const exists = data?.some((file) => file.name === "family-bylaw.pdf");
+
+      let source = familyPDF;
+      if (exists) {
+        const { data: publicData } = supabase.storage
+          .from("homepage-media")
+          .getPublicUrl("documents/family-bylaw.pdf");
+        source = `${publicData.publicUrl}?t=${Date.now()}`;
+      } else {
+        setIsPlaceholder(true);
+      }
+
+      const loadingTask = pdfjsLib.getDocument(source);
+      loadingTask.promise.then((pdf) => {
+        setPdfDoc(pdf);
+        renderPage(1, pdf);
+      });
+    };
+    loadFromStorage();
     // Load the PDF once on mount; renderPage is redefined every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -131,9 +151,15 @@ export default function FamilyByLaw() {
       <p className="uppercase tracking-[0.25em] text-secondary/80 text-xs font-semibold mb-3">
         Governing document
       </p>
-      <h1 className="text-3xl sm:text-4xl font-heading font-bold text-secondary mb-8 text-center">
+      <h1 className="text-3xl sm:text-4xl font-heading font-bold text-secondary mb-2 text-center">
         Family By-Law
       </h1>
+      {isPlaceholder && (
+        <p className="text-gray-500 text-xs sm:text-sm mb-6 text-center max-w-md">
+          No by-law document has been uploaded yet — showing a placeholder.
+        </p>
+      )}
+      {!isPlaceholder && <div className="mb-8" />}
 
       <div
         ref={containerRef}

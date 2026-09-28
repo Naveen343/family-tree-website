@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { LogOut } from "lucide-react";
 import supabase from "../lib/supabaseClient";
 import CommunityPostsAdmin from "./admin/CommunityPostsAdmin";
 import MatrimonyAdmin from "./admin/MatrimonyAdmin";
+import { useAdminAuth } from "../hooks/useAdminAuth";
 
 const UploadDashboard = () => {
+  const { logout } = useAdminAuth();
   const [activeTab, setActiveTab] = useState("home");
 
   // Video states
@@ -19,12 +22,17 @@ const UploadDashboard = () => {
     "spiritual-fathers",
     "guardians",
     "youth-wing",
-    "committe-members",
+    "committee-members",
   ];
   const [sliderImages, setSliderImages] = useState({});
   const [uploadingSlider, setUploadingSlider] = useState("");
 
   const videoFilename = "videos/family-video.mp4";
+
+  // Family By-Law PDF state
+  const [bylawUrl, setBylawUrl] = useState("");
+  const [uploadingBylaw, setUploadingBylaw] = useState(false);
+  const bylawFilename = "documents/family-bylaw.pdf";
 
   // News state
   const [newsList, setNewsList] = useState([]);
@@ -78,6 +86,33 @@ const UploadDashboard = () => {
       .remove([videoFilename]);
     if (error) alert("Delete failed: " + error.message);
     else setVideoUrl("");
+  };
+
+  // ------------------- Family By-Law PDF Functions -------------------
+  const fetchBylaw = async () => {
+    const { data } = await supabase.storage.from("homepage-media").list("documents", { search: "family-bylaw.pdf" });
+    const exists = data?.some((file) => file.name === "family-bylaw.pdf");
+    if (exists) {
+      const { data: publicData } = supabase.storage.from("homepage-media").getPublicUrl(bylawFilename);
+      setBylawUrl(`${publicData.publicUrl}?t=${Date.now()}`);
+    } else {
+      setBylawUrl("");
+    }
+  };
+
+  const handleBylawUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || file.type !== "application/pdf") return;
+
+    setUploadingBylaw(true);
+    const { error } = await supabase.storage
+      .from("homepage-media")
+      .upload(bylawFilename, file, { upsert: true, cacheControl: "3600", contentType: "application/pdf" });
+
+    if (error) alert("Upload failed: " + error.message);
+    else await fetchBylaw();
+
+    setUploadingBylaw(false);
   };
 
   // ------------------- Slider Image Functions -------------------
@@ -263,6 +298,7 @@ const UploadDashboard = () => {
       fetchSliderImages();
       fetchNews();
     }
+    if (activeTab === "bylaw") fetchBylaw();
     // The fetch helpers are recreated every render; only re-run when the tab changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
@@ -274,6 +310,7 @@ const UploadDashboard = () => {
     charity: "Charity",
     academics: "Academics",
     matrimony: "Matrimony",
+    bylaw: "By-Law PDF",
   };
   const inputClasses =
     "w-full bg-[#16202B] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-secondary";
@@ -281,16 +318,22 @@ const UploadDashboard = () => {
   return (
     <div className="bg-[#16202B] min-h-screen text-white mt-16">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <div className="text-center mb-8">
+        <div className="relative text-center mb-8">
           <p className="uppercase tracking-[0.25em] text-secondary/80 text-xs font-semibold mb-3">
             Admin
           </p>
           <h1 className="text-3xl font-heading font-bold text-secondary">Upload Dashboard</h1>
+          <button
+            onClick={logout}
+            className="absolute right-0 top-0 flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
+          >
+            <LogOut size={15} /> Log Out
+          </button>
         </div>
 
         {/* Tabs */}
         <div className="flex justify-center flex-wrap gap-3 mb-8">
-          {["home", "family-tree", "news-events", "charity", "academics", "matrimony"].map((tab) => (
+          {["home", "family-tree", "news-events", "charity", "academics", "matrimony", "bylaw"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -540,6 +583,49 @@ const UploadDashboard = () => {
 
           {/* ---------- MATRIMONY TAB ---------- */}
           {activeTab === "matrimony" && <MatrimonyAdmin />}
+
+          {/* ---------- BY-LAW PDF TAB ---------- */}
+          {activeTab === "bylaw" && (
+            <div>
+              <h2 className="text-xl font-heading font-semibold mb-2 text-secondary">
+                Family By-Law PDF
+              </h2>
+              <p className="text-gray-400 mb-4">
+                Uploading a new file replaces the one shown on the{" "}
+                <Link to="/family-bylaw" className="text-secondary hover:underline">
+                  Family By-Law page
+                </Link>
+                .
+              </p>
+
+              {bylawUrl ? (
+                <a
+                  href={bylawUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mb-4 text-secondary hover:underline"
+                >
+                  View current PDF →
+                </a>
+              ) : (
+                <p className="text-gray-500 text-sm mb-4">
+                  No PDF uploaded yet — the page currently shows a placeholder document.
+                </p>
+              )}
+
+              <div>
+                <label className="cursor-pointer inline-block bg-secondary text-[#16202B] font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition">
+                  {uploadingBylaw ? "Uploading..." : "Upload PDF"}
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    className="hidden"
+                    onChange={handleBylawUpload}
+                  />
+                </label>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

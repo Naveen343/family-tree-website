@@ -40,12 +40,12 @@ const ImageSlider = ({ images }) => {
       }`}
     >
       {displayed.map((img, index) => (
-        <img
+        <div
           key={index}
-          src={img.src}
-          alt={img.alt}
-          className="w-56 h-64 object-cover rounded-xl shadow-lg shadow-black/30 border border-white/10"
-        />
+          className="w-56 rounded-xl shadow-lg shadow-black/30 border border-white/10 overflow-hidden bg-[#0e1620]"
+        >
+          <img src={img.src} alt={img.alt} className="block w-full h-auto" />
+        </div>
       ))}
     </div>
   );

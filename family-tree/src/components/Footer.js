@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
-import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon, Mail, Phone } from "lucide-react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon, Mail, Phone, LogIn, LogOut } from "lucide-react";
+import { useAdminAuth } from "../hooks/useAdminAuth";
+import AdminLoginModal from "./AdminLoginModal";
 
 const QUICK_LINKS = [
   { name: "Home", to: "/" },
@@ -17,6 +20,10 @@ const SOCIALS = [
 ];
 
 const Footer = () => {
+  const { isAdmin, logout } = useAdminAuth();
+  const [showLogin, setShowLogin] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <footer className="bg-[#131B24] text-white border-t border-white/10">
       <div className="container mx-auto px-4 py-14">
@@ -57,6 +64,23 @@ const Footer = () => {
                   </Link>
                 </li>
               ))}
+              <li>
+                {isAdmin ? (
+                  <button
+                    onClick={logout}
+                    className="flex items-center gap-1.5 text-white/70 hover:text-secondary transition-colors duration-200"
+                  >
+                    <LogOut size={14} /> Admin Logout
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setShowLogin(true)}
+                    className="flex items-center gap-1.5 text-white/70 hover:text-secondary transition-colors duration-200"
+                  >
+                    <LogIn size={14} /> Admin Login
+                  </button>
+                )}
+              </li>
             </ul>
           </div>
 
@@ -79,6 +103,16 @@ const Footer = () => {
           <p>&copy; {new Date().getFullYear()} Therampu Kudumbam. All rights reserved.</p>
         </div>
       </div>
+
+      {showLogin && (
+        <AdminLoginModal
+          onClose={() => setShowLogin(false)}
+          onSuccess={() => {
+            setShowLogin(false);
+            navigate("/uploads");
+          }}
+        />
+      )}
     </footer>
   );
 };

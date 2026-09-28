@@ -12,6 +12,7 @@ import { buildFamilyForest, lifespan } from "../lib/familyTree";
 import Avatar from "./Avatar";
 import PageHero from "./PageHero";
 import MemberFormModal from "./MemberFormModal";
+import { useAdminAuth } from "../hooks/useAdminAuth";
 
 function PersonAvatar({ person, size = 28 }) {
   return (
@@ -107,7 +108,7 @@ function RelativeLink({ person, onSelect }) {
   );
 }
 
-function DetailPanel({ person, byId, onSelect, onClose, onAddChild, onAddSpouse, onEdit, onDelete }) {
+function DetailPanel({ person, byId, onSelect, onClose, onAddChild, onAddSpouse, onEdit, onDelete, isAdmin }) {
   if (!person) return null;
   const father = person.father_id ? byId.get(person.father_id) : null;
   const mother = person.mother_id ? byId.get(person.mother_id) : null;
@@ -131,34 +132,36 @@ function DetailPanel({ person, byId, onSelect, onClose, onAddChild, onAddSpouse,
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2 p-4 border-b border-[#33465A]">
-        <button
-          onClick={() => onAddChild(person)}
-          className="flex items-center gap-1.5 text-xs font-medium bg-white/5 hover:bg-white/10 text-white px-3 py-1.5 rounded-full transition-colors"
-        >
-          <UserPlus size={13} /> Add Child
-        </button>
-        {!spouse && (
+      {isAdmin && (
+        <div className="flex flex-wrap gap-2 p-4 border-b border-[#33465A]">
           <button
-            onClick={() => onAddSpouse(person)}
+            onClick={() => onAddChild(person)}
             className="flex items-center gap-1.5 text-xs font-medium bg-white/5 hover:bg-white/10 text-white px-3 py-1.5 rounded-full transition-colors"
           >
-            <Heart size={13} /> Add Spouse
+            <UserPlus size={13} /> Add Child
           </button>
-        )}
-        <button
-          onClick={() => onEdit(person)}
-          className="flex items-center gap-1.5 text-xs font-medium bg-white/5 hover:bg-white/10 text-white px-3 py-1.5 rounded-full transition-colors"
-        >
-          <Pencil size={13} /> Edit
-        </button>
-        <button
-          onClick={() => onDelete(person)}
-          className="flex items-center gap-1.5 text-xs font-medium bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-full transition-colors"
-        >
-          <Trash2 size={13} /> Delete
-        </button>
-      </div>
+          {!spouse && (
+            <button
+              onClick={() => onAddSpouse(person)}
+              className="flex items-center gap-1.5 text-xs font-medium bg-white/5 hover:bg-white/10 text-white px-3 py-1.5 rounded-full transition-colors"
+            >
+              <Heart size={13} /> Add Spouse
+            </button>
+          )}
+          <button
+            onClick={() => onEdit(person)}
+            className="flex items-center gap-1.5 text-xs font-medium bg-white/5 hover:bg-white/10 text-white px-3 py-1.5 rounded-full transition-colors"
+          >
+            <Pencil size={13} /> Edit
+          </button>
+          <button
+            onClick={() => onDelete(person)}
+            className="flex items-center gap-1.5 text-xs font-medium bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-full transition-colors"
+          >
+            <Trash2 size={13} /> Delete
+          </button>
+        </div>
+      )}
 
       <div className="p-4 space-y-4 text-sm">
         {(person.birth_place || person.death_place) && (
@@ -211,6 +214,7 @@ function DetailPanel({ person, byId, onSelect, onClose, onAddChild, onAddSpouse,
 }
 
 export default function FamilyTreeView() {
+  const { isAdmin } = useAdminAuth();
   const { data: people, isLoading, isError, error } = useFamilyMembers();
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -352,7 +356,10 @@ export default function FamilyTreeView() {
   };
 
   const formModalProps = {
-    "add-root": { title: "Add Family Member", subtitle: "Adds a new, unconnected person to the tree." },
+    "add-root": {
+      title: "Add Family Member",
+      subtitle: "Optionally link them to an existing father or mother so they appear in the right place.",
+    },
     "add-child": {
       title: `Add Child of ${formTask?.person?.display_name ?? ""}`,
       subtitle: "The new person will be linked as a child automatically.",
@@ -392,14 +399,16 @@ export default function FamilyTreeView() {
             <p className="mb-4">
               No family members yet. Run the seed script in{" "}
               <code className="text-secondary">api/supabase/sql/family_members_seed.sql</code> to populate the
-              tree, or add the first person yourself.
+              tree{isAdmin ? ", or add the first person yourself." : "."}
             </p>
-            <button
-              onClick={() => setFormTask({ type: "add-root" })}
-              className="inline-flex items-center gap-1.5 bg-secondary text-[#16202B] font-semibold px-4 py-2 rounded-full hover:opacity-90 transition"
-            >
-              <UserPlus size={15} /> Add Family Member
-            </button>
+            {isAdmin && (
+              <button
+                onClick={() => setFormTask({ type: "add-root" })}
+                className="inline-flex items-center gap-1.5 bg-secondary text-[#16202B] font-semibold px-4 py-2 rounded-full hover:opacity-90 transition"
+              >
+                <UserPlus size={15} /> Add Family Member
+              </button>
+            )}
           </div>
         )}
 
@@ -444,12 +453,14 @@ export default function FamilyTreeView() {
                 )}
               </div>
 
-              <button
-                onClick={() => setFormTask({ type: "add-root" })}
-                className="flex items-center gap-1.5 bg-secondary text-[#16202B] font-semibold px-4 py-2 rounded-full hover:opacity-90 transition text-sm"
-              >
-                <UserPlus size={15} /> Add Family Member
-              </button>
+              {isAdmin && (
+                <button
+                  onClick={() => setFormTask({ type: "add-root" })}
+                  className="flex items-center gap-1.5 bg-secondary text-[#16202B] font-semibold px-4 py-2 rounded-full hover:opacity-90 transition text-sm"
+                >
+                  <UserPlus size={15} /> Add Family Member
+                </button>
+              )}
             </div>
 
             <div
@@ -506,6 +517,7 @@ export default function FamilyTreeView() {
                 onAddSpouse={(person) => setFormTask({ type: "add-spouse", person })}
                 onEdit={(person) => setFormTask({ type: "edit", person })}
                 onDelete={handleDeletePerson}
+                isAdmin={isAdmin}
               />
             </div>
 
@@ -528,6 +540,8 @@ export default function FamilyTreeView() {
           error={formError}
           onSubmit={handleFormSubmit}
           onClose={closeForm}
+          people={people || []}
+          showParentFields={formTask.type === "add-root"}
         />,
           isFullscreen && containerRef.current ? containerRef.current : document.body
         )}

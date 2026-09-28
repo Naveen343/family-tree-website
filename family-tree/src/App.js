@@ -21,6 +21,7 @@ import About from "./pages/about";
 import Charity from "./pages/charity";
 import Academics from "./pages/academics";
 import FamilyMatrimony from "./pages/family-matrimony";
+import { AdminAuthProvider } from "./hooks/useAdminAuth";
 
 
 
@@ -46,25 +47,27 @@ function Home() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<ComingSoon title="Contact Us" />} />
-          <Route path="/charity" element={<Charity />} />
-          <Route path="/academics" element={<Academics />} />
-          <Route path="/family-matrimony" element={<FamilyMatrimony />} />
-          <Route path="/family-directory" element={<ComingSoon title="Family Directory" />} />
-          <Route path="/family-ebook" element={<ComingSoon title="Family E-book" />} />
-          <Route path="/uploads" element={<UploadDashboard />} />
-          <Route path="/news-events" element={<NewsEvents />} />
-          <Route path="/family-tree" element={<FamilyTree />} />
-          <Route path="/family-history" element={<FamilyHistory />} />
-          <Route path="/family-branches" element={<FamilyBranches />} />
-          <Route path="/family-bylaw" element={<FamilyByLaw />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AdminAuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<ComingSoon title="Contact Us" />} />
+            <Route path="/charity" element={<Charity />} />
+            <Route path="/academics" element={<Academics />} />
+            <Route path="/family-matrimony" element={<FamilyMatrimony />} />
+            <Route path="/family-directory" element={<ComingSoon title="Family Directory" />} />
+            <Route path="/family-ebook" element={<ComingSoon title="Family E-book" />} />
+            <Route path="/uploads" element={<UploadDashboard />} />
+            <Route path="/news-events" element={<NewsEvents />} />
+            <Route path="/family-tree" element={<FamilyTree />} />
+            <Route path="/family-history" element={<FamilyHistory />} />
+            <Route path="/family-branches" element={<FamilyBranches />} />
+            <Route path="/family-bylaw" element={<FamilyByLaw />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AdminAuthProvider>
     </QueryClientProvider>
   );
 }
