@@ -4,7 +4,9 @@ import { LogOut } from "lucide-react";
 import supabase from "../lib/supabaseClient";
 import CommunityPostsAdmin from "./admin/CommunityPostsAdmin";
 import MatrimonyAdmin from "./admin/MatrimonyAdmin";
+import FamilyVideosAdmin from "./admin/FamilyVideosAdmin";
 import { useAdminAuth } from "../hooks/useAdminAuth";
+import { validateImageFile } from "../lib/fileValidation";
 
 const UploadDashboard = () => {
   const { logout } = useAdminAuth();
@@ -23,6 +25,7 @@ const UploadDashboard = () => {
     "guardians",
     "youth-wing",
     "committee-members",
+    "loving-memories",
   ];
   const [sliderImages, setSliderImages] = useState({});
   const [uploadingSlider, setUploadingSlider] = useState("");
@@ -140,7 +143,13 @@ const UploadDashboard = () => {
 
   const handleSliderUpload = async (folder, e) => {
     const file = e.target.files[0];
-    if (!file || !file.type.startsWith("image/")) return;
+    if (!file) return;
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      alert(validationError);
+      e.target.value = "";
+      return;
+    }
 
     const filename = `${folder}/${Date.now()}-${file.name}`;
     setUploadingSlider(folder);
@@ -160,6 +169,8 @@ const UploadDashboard = () => {
   };
 
   const handleSliderDelete = async (folder, filename) => {
+    if (!window.confirm("Delete this image? This can't be undone.")) return;
+
     const { error } = await supabase
       .storage
       .from("homepage-media")
@@ -198,7 +209,13 @@ const UploadDashboard = () => {
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (!file || !file.type.startsWith("image/")) return;
+    if (!file) return;
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      alert(validationError);
+      e.target.value = "";
+      return;
+    }
 
     const filename = `hero/${Date.now()}-${file.name}`;
 
@@ -218,6 +235,8 @@ const UploadDashboard = () => {
   };
 
   const handleImageDelete = async (filename) => {
+    if (!window.confirm("Delete this image? This can't be undone.")) return;
+
     const { error } = await supabase.storage
       .from("homepage-media")
       .remove([`hero/${filename}`]);
@@ -311,6 +330,7 @@ const UploadDashboard = () => {
     academics: "Academics",
     matrimony: "Matrimony",
     bylaw: "By-Law PDF",
+    videos: "Family History Videos",
   };
   const inputClasses =
     "w-full bg-[#16202B] border border-white/10 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-secondary";
@@ -333,7 +353,7 @@ const UploadDashboard = () => {
 
         {/* Tabs */}
         <div className="flex justify-center flex-wrap gap-3 mb-8">
-          {["home", "family-tree", "news-events", "charity", "academics", "matrimony", "bylaw"].map((tab) => (
+          {["home", "family-tree", "news-events", "charity", "academics", "matrimony", "bylaw", "videos"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -583,6 +603,9 @@ const UploadDashboard = () => {
 
           {/* ---------- MATRIMONY TAB ---------- */}
           {activeTab === "matrimony" && <MatrimonyAdmin />}
+
+          {/* ---------- VIDEOS TAB ---------- */}
+          {activeTab === "videos" && <FamilyVideosAdmin />}
 
           {/* ---------- BY-LAW PDF TAB ---------- */}
           {activeTab === "bylaw" && (

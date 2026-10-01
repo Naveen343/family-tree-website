@@ -53,6 +53,18 @@ export default function MatrimonyAdmin() {
                   <option value="archived">Archived</option>
                 </select>
               </div>
+              {person.photo_urls?.length > 0 && (
+                <div className="flex gap-2 mb-3">
+                  {person.photo_urls.map((url) => (
+                    <img
+                      key={url}
+                      src={url}
+                      alt=""
+                      className="w-14 h-14 rounded-lg object-cover border border-white/10"
+                    />
+                  ))}
+                </div>
+              )}
               <dl className="text-sm text-gray-300 space-y-1 mb-3">
                 {person.gender && <p>Gender: {person.gender === "M" ? "Male" : "Female"}</p>}
                 {person.branch && <p>Branch: {person.branch}</p>}

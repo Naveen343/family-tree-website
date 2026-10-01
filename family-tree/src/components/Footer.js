@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon, Mail, Phone, LogIn, LogOut } from "lucide-react";
+import { FacebookIcon, InstagramIcon, TwitterIcon, YoutubeIcon, Mail, Phone, LogIn, LogOut, Upload } from "lucide-react";
 import { useAdminAuth } from "../hooks/useAdminAuth";
 import AdminLoginModal from "./AdminLoginModal";
 
@@ -64,6 +64,15 @@ const Footer = () => {
                   </Link>
                 </li>
               ))}
+              {isAdmin && (
+                <li>
+                  <Link to="/uploads">
+                    <span className="flex items-center gap-1.5 text-white/70 hover:text-secondary transition-colors duration-200 cursor-pointer">
+                      <Upload size={14} /> Admin Uploads
+                    </span>
+                  </Link>
+                </li>
+              )}
               <li>
                 {isAdmin ? (
                   <button

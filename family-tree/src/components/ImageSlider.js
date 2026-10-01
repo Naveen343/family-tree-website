@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 
-const ImageSlider = ({ images }) => {
+const ImageSlider = ({ images, perPage = 2 }) => {
   const [startIndex, setStartIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
   useEffect(() => {
-    if (images.length <= 2) return;
+    if (images.length <= perPage) return;
     const interval = setInterval(() => {
       setFade(false);
       setTimeout(() => {
-        const nextIndex = startIndex + 2 < images.length ? startIndex + 2 : 0;
+        const nextIndex = startIndex + perPage < images.length ? startIndex + perPage : 0;
         setStartIndex(nextIndex);
         setFade(true);
       }, 200);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [startIndex, images.length]);
+  }, [startIndex, images.length, perPage]);
 
   if (!images.length) {
     return (
@@ -26,12 +26,7 @@ const ImageSlider = ({ images }) => {
     );
   }
 
-  const getCurrentSlide = () => {
-    if (startIndex + 1 === images.length) return [images[startIndex]];
-    return images.slice(startIndex, startIndex + 2);
-  };
-
-  const displayed = getCurrentSlide();
+  const displayed = images.slice(startIndex, startIndex + perPage);
 
   return (
     <div
@@ -41,7 +36,7 @@ const ImageSlider = ({ images }) => {
     >
       {displayed.map((img, index) => (
         <div
-          key={index}
+          key={`${startIndex}-${index}`}
           className="w-56 rounded-xl shadow-lg shadow-black/30 border border-white/10 overflow-hidden bg-[#0e1620]"
         >
           <img src={img.src} alt={img.alt} className="block w-full h-auto" />

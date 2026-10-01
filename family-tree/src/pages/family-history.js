@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import PageHero from "../components/PageHero";
 import Avatar from "../components/Avatar";
+import FamilyVideoGrid from "../components/FamilyVideoGrid";
 
 const GENERATIONS = [
   {
@@ -90,6 +91,8 @@ export default function FamilyHistory() {
             ))}
           </ul>
         </section>
+
+        <FamilyVideoGrid />
 
         {/* Key Figures */}
         <section className="bg-[#1E2A36] py-16 px-6 border-y border-white/5">

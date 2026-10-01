@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { X } from "lucide-react";
+import supabase from "../lib/supabaseClient";
+import { validateImageFile } from "../lib/fileValidation";
 
 const emptyForm = {
   given_name: "",
@@ -72,6 +74,61 @@ function PersonPicker({ label, people, value, onChange, placeholder }) {
             </div>
           )}
         </div>
+      )}
+    </div>
+  );
+}
+
+function PhotoUploadField({ value, onChange }) {
+  const [uploading, setUploading] = useState(false);
+
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const validationError = validateImageFile(file);
+    if (validationError) {
+      alert(validationError);
+      e.target.value = "";
+      return;
+    }
+
+    setUploading(true);
+    const path = `family-tree/${Date.now()}-${file.name}`;
+    const { error } = await supabase.storage
+      .from("homepage-media")
+      .upload(path, file, { cacheControl: "3600", contentType: file.type });
+
+    if (error) {
+      alert("Upload failed: " + error.message);
+      setUploading(false);
+      e.target.value = "";
+      return;
+    }
+
+    const { data } = supabase.storage.from("homepage-media").getPublicUrl(path);
+    onChange(data.publicUrl);
+    setUploading(false);
+  };
+
+  return (
+    <div>
+      <label className="block text-xs font-medium text-white/70 mb-1">Photo</label>
+      {value ? (
+        <div className="flex items-center gap-2">
+          <img src={value} alt="" className="w-10 h-10 rounded-full object-cover border border-white/10" />
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="text-xs text-red-400 hover:underline"
+          >
+            Remove
+          </button>
+        </div>
+      ) : (
+        <label className="cursor-pointer inline-block bg-white/10 text-white text-sm px-3 py-2 rounded-lg hover:bg-white/20 transition">
+          {uploading ? "Uploading…" : "Upload Photo"}
+          <input type="file" accept="image/*" className="hidden" onChange={handleFile} disabled={uploading} />
+        </label>
       )}
     </div>
   );
@@ -169,10 +226,10 @@ export default function MemberFormModal({
                 <option value="F">Female</option>
               </select>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-white/70 mb-1">Photo URL</label>
-              <input className={inputClasses} value={form.photo_url} onChange={set("photo_url")} placeholder="https://…" />
-            </div>
+            <PhotoUploadField
+              value={form.photo_url}
+              onChange={(url) => setForm((f) => ({ ...f, photo_url: url }))}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-3">

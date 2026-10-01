@@ -25,12 +25,14 @@ const FamilyTeamOfficial = () => {
   const [guardians, setGuardians] = useState([]);
   const [youthWing, setYouthWing] = useState([]);
   const [committee, setCommittee] = useState([]);
+  const [lovingMemories, setLovingMemories] = useState([]);
 
   useEffect(() => {
     fetchImages("spiritual-fathers").then(setSpiritualFathers);
     fetchImages("guardians").then(setGuardians);
     fetchImages("youth-wing").then(setYouthWing);
     fetchImages("committee-members").then(setCommittee);
+    fetchImages("loving-memories").then(setLovingMemories);
   }, []);
 
   const renderRow = (leftTitle, leftImgs, rightTitle, rightImgs) => (
@@ -80,6 +82,17 @@ const FamilyTeamOfficial = () => {
           "Therampu Kudumpa Yogam\nCommittee Members 2025-2026\nPresent Office Bearers",
           committee
         )}
+
+        <div className="border-t border-white/10" />
+        <div className="text-center">
+          <h3 className="text-base md:text-lg font-semibold mb-1 text-white">
+            Our Loving Memories
+          </h3>
+          <p className="text-sm text-gray-400 mb-5">
+            In loving memory of those who came before us
+          </p>
+          <ImageSlider images={lovingMemories} perPage={4} />
+        </div>
       </div>
     </section>
   );

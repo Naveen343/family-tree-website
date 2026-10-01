@@ -121,7 +121,7 @@ function DetailPanel({ person, byId, onSelect, onClose, onAddChild, onAddSpouse,
     <div className="absolute top-0 right-0 h-full w-full sm:w-80 bg-[#1E2A36] border-l border-[#33465A] shadow-2xl overflow-y-auto z-20">
       <div className="flex items-start justify-between p-4 border-b border-[#33465A]">
         <div className="flex items-center gap-3">
-          <PersonAvatar person={person} size={48} />
+          <PersonAvatar person={person} size={72} />
           <div>
             <h3 className="text-white font-semibold leading-tight">{person.display_name}</h3>
             <p className="text-gray-400 text-sm">{lifespan(person)}</p>

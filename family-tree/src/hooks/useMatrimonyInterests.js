@@ -1,9 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import supabase from "../lib/supabaseClient";
 
-const QUERY_KEY = ["matrimony_interests"];
+const ADMIN_QUERY_KEY = ["matrimony_interests"];
+const PUBLIC_QUERY_KEY = ["matrimony_interests_public"];
+const PUBLIC_COLUMNS =
+  "id, full_name, age, gender, branch, education, occupation, location, about, photo_urls, created_at";
+
+function invalidateAll(queryClient) {
+  queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEY });
+  queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEY });
+}
 
 export function useSubmitMatrimonyInterest() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (fields) => {
       const { data, error } = await supabase
@@ -14,13 +23,30 @@ export function useSubmitMatrimonyInterest() {
       if (error) throw error;
       return data;
     },
+    onSuccess: () => invalidateAll(queryClient),
   });
 }
 
-// Admin-only (Upload Dashboard). Never called from the public matrimony page.
+// Public grid on the Family Matrimony page. Deliberately leaves out
+// contact_phone/contact_email — those stay visible only in the admin view.
+export function useMatrimonyInterestsPublic() {
+  return useQuery({
+    queryKey: PUBLIC_QUERY_KEY,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("matrimony_interests")
+        .select(PUBLIC_COLUMNS)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+}
+
+// Admin-only (Upload Dashboard) — includes contact details and status.
 export function useMatrimonyInterestsAdmin() {
   return useQuery({
-    queryKey: QUERY_KEY,
+    queryKey: ADMIN_QUERY_KEY,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("matrimony_interests")
@@ -45,7 +71,7 @@ export function useUpdateMatrimonyInterest() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEY }),
+    onSuccess: () => invalidateAll(queryClient),
   });
 }
 
@@ -57,6 +83,6 @@ export function useDeleteMatrimonyInterest() {
       if (error) throw error;
       return id;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEY }),
+    onSuccess: () => invalidateAll(queryClient),
   });
 }
