@@ -5,9 +5,13 @@ import { useAdminAuth } from "../hooks/useAdminAuth";
 import Avatar from "./Avatar";
 import MatrimonyInterestForm from "./MatrimonyInterestForm";
 
+const ABOUT_TRUNCATE_LENGTH = 140;
+
 function ProfileCard({ profile, onDelete, onEdit, isAdmin }) {
   const photos = profile.photo_urls || [];
   const [activePhoto, setActivePhoto] = useState(0);
+  const [aboutExpanded, setAboutExpanded] = useState(false);
+  const isLongAbout = (profile.about || "").length > ABOUT_TRUNCATE_LENGTH;
 
   return (
     <div className="bg-[#1E2A36] border border-white/5 rounded-2xl overflow-hidden hover:border-secondary/30 transition-colors shadow-md flex flex-col">
@@ -49,7 +53,20 @@ function ProfileCard({ profile, onDelete, onEdit, isAdmin }) {
         </div>
 
         {profile.about && (
-          <p className="text-gray-400 text-xs mt-2 line-clamp-3 flex-grow">{profile.about}</p>
+          <div className="mt-2 flex-grow">
+            <p className={`text-gray-400 text-xs whitespace-pre-line ${!aboutExpanded ? "line-clamp-3" : ""}`}>
+              {profile.about}
+            </p>
+            {isLongAbout && (
+              <button
+                type="button"
+                onClick={() => setAboutExpanded((v) => !v)}
+                className="text-secondary text-xs font-medium hover:underline mt-1"
+              >
+                {aboutExpanded ? "Read less" : "Read more"}
+              </button>
+            )}
+          </div>
         )}
 
         <div className="mt-3 flex items-center gap-4">
